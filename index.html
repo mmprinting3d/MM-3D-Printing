@@ -253,7 +253,8 @@ const translations = {
     footer: "© 2026 MM 3D Printing. All Rights Reserved.",
     noImg: "No Image",
     tbd: "Price on Request",
-    fourPack: "4 Pack"
+    fourPack: "4 Pack",
+    twoPack: "2 Pack"
   },
   he: {
     slogan: "בואו נהפוך את הבלתי אפשרי לאפשרי",
@@ -264,7 +265,8 @@ const translations = {
     footer: "© 2026 MM 3D Printing. כל הזכויות שמורות.",
     noImg: "אין תמונה",
     tbd: "מחיר לפי דרישה",
-    fourPack: "מארז רביעייה"
+    fourPack: "מארז רביעייה",
+    twoPack: "מארז זוגי"
   }
 };
 
@@ -282,18 +284,18 @@ const categories = [
 ];
 
 const products = [
-  { nameEn: "Chametz-Free sign", nameHe: "חדר זה נקי לפסח", price: "120.00", cat: "Pesach", ribbon: true },
+  { nameEn: "Chametz-Free sign", nameHe: "חדר זה נקי לפסח", price: "120.00", cat: "Pesach", ext: "jpeg", ribbon: "fourPack" },
   { nameEn: "Omer calendar", nameHe: "לוח ספירת העומר", price: "65.00", cat: "Pesach" },
-  { nameEn: "Checklist", nameHe: "צ'ק ליסט", price: "35.00", cat: "Back to School" },
+  { nameEn: "Checklist", nameHe: "צ'ק ליסט", price: "35.00", cat: "Back to School", ext: "jpg" },
   { nameEn: "Phone Stand with a Charging Slot", nameHe: "מעמד לטלפון עם חריץ טעינה", price: "30.00", cat: "Back to School" },
   { nameEn: "Sticky Note Holder", nameHe: "מעמד לדפי ממו", price: "35.00", cat: "Back to School" },
   { nameEn: "Elegant book stand", nameHe: "מעמד ספרים אלגנטי", price: "35.00", cat: "Book Accessories" },
   { nameEn: "Foldable Book Stand", nameHe: "מעמד ספרים מתקפל", price: "35.00", cat: "Book Accessories" },
-  { nameEn: "Simple Book End stop (2 pack)", nameHe: "מעצורי ספרים פשוטים (זוג)", price: "25.00", cat: "Book Accessories" },
-  { nameEn: "The book bookmark", nameHe: "סימניית ספר מיוחדת", price: "5.00", cat: "Book Accessories" },
+  { nameEn: "Simple Book End stop", nameHe: "מעצורי ספרים פשוטים", price: "25.00", cat: "Book Accessories", ext: "webp", ribbon: "twoPack" },
+  { nameEn: "the book bookmark", nameHe: "סימניית ספר מיוחדת", price: "5.00", cat: "Book Accessories", ext: "webp" },
   { nameEn: "Zipper bookmark", nameHe: "סימניית רוכסן", price: "15.00", cat: "Book Accessories" },
   { nameEn: "book bookmark", nameHe: "סימניייה לספר", price: "10.00", cat: "Book Accessories" },
-  { nameEn: "Emoji keyring", nameHe: "מחזיק מפתחות אמוג'י", price: "10.00", cat: "Fidget Toys" },
+  { nameEn: "Emoji keyring", nameHe: "מחזיק מפתחות אמוג'י", price: "10.00", cat: "Keyrings" },
   { nameEn: "Fidget dragon", nameHe: "דרקון פידג'ט", price: "30.00", cat: "Fidget Toys" },
   { nameEn: "Fidget star", price: "15.00", nameHe: "כוכב פידג'ט", cat: "Fidget Toys" },
   { nameEn: "Flexi Rex", price: "15.00", nameHe: "דינו-טיק", cat: "Fidget Toys" },
@@ -308,11 +310,12 @@ const products = [
   { nameEn: "EU Plug Travel Protection", nameHe: "מגן תקע אירופאי לנסיעות", price: "25.00", cat: "Travel Essentials" },
   { nameEn: "Earphone case & phone stand", nameHe: "נרתיק אוזניות ומעמד לטלפון", price: "20.00", cat: "Travel Essentials" },
   { nameEn: "Modular Tie Box with Travel Lid", nameHe: "קופסת עניבות מודולרית", price: "40.00", cat: "Travel Essentials" },
-  { nameEn: "OralB Toothbrush Head Case", nameHe: "כיסוי לראש מברשת שיניים OralB", price: "15.00", cat: "Travel Essentials" },
-  { nameEn: "Q-tip - travel box", nameHe: "קופסת מקלוני אוזניים לנסיעה", price: "25.00", cat: "Travel Essentials" },
-  { nameEn: "Travel cutlery box", nameHe: "קופסת סכו\"ם לנסיעות", price: "35.00", cat: "Travel Essentials" },
+  { nameEn: "OralB Toothbrush Head Case", nameHe: "כיסוי לראש מברשת שיניים OralB", price: "15.00", cat: "Travel Essentials", ext: "webp" },
+  { nameEn: "Q-tip - travel box", nameHe: "קופסת מקלוני אוזניים לנסיעה", price: "25.00", cat: "Travel Essentials", ext: "webp" },
+  { nameEn: "Travel cutlery box", nameHe: "קופסת סכו\"ם לנסיעות", price: "35.00", cat: "Travel Essentials", ext: "webp" },
   { nameEn: "Universal card case", nameHe: "נרתיק כרטיסים אוניברסלי", price: "30.00", cat: "Travel Essentials" },
-  { nameEn: "Folding Comb", nameHe: "מסרק מתקפל", price: "24.00", cat: "Tools & Accessories" },
+  { nameEn: "Folding Comb", nameHe: "מסרק מתקפל", price: "24.00", cat: "Travel Essentials" },
+  { nameEn: "Toothbrush Travel Case", nameHe: "נרתיק מברשת שיניים לנסיעה", price: "15.00", cat: "Travel Essentials" },
   { nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק משאבת הזנה אינפיניטי", price: "60.00", cat: "Tools & Accessories" },
   { nameEn: "Scrub daddy stand", nameHe: "מעמד לספוג Scrub Daddy", price: "30.00", cat: "Tools & Accessories" },
   { nameEn: "Gyroscope keyring", nameHe: "מחזיק מפתחות גירוסקופ", price: "20.00", cat: "Keyrings" },
@@ -358,11 +361,14 @@ function renderCatalog() {
       const whatsappUrl = `https://wa.me/972586780680?text=${encodeURIComponent(waText)}`;
       const emailSub = translations[currentLang].emailSub + name;
       const emailUrl = `mailto:mm3dprinting613@gmail.com?subject=${encodeURIComponent(emailSub)}&body=${encodeURIComponent(waText)}`;
+      
+      const fileExt = product.ext || "png";
+      const imgSrc = `images/${product.nameEn}.${fileExt}`;
 
       grid.innerHTML += `
         <div class="product-card">
-          ${product.ribbon ? `<div class="ribbon">${translations[currentLang].fourPack}</div>` : ''}
-          <img src="images/${product.nameEn}.png" class="product-img" 
+          ${product.ribbon ? `<div class="ribbon">${translations[currentLang][product.ribbon]}</div>` : ''}
+          <img src="${imgSrc}" class="product-img" 
                onerror="this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(name)}'">
           <div class="product-details">
             <h3 class="product-name">${name}</h3>
