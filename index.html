@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catalog | MM 3D Printing</title>
   
-  <!-- Favicon setup - Corrected to match your GitHub folder structure -->
+  <!-- Favicon setup -->
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
   <link rel="shortcut icon" href="favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon/android-chrome-512x512.png">
-  
-  <!-- Corrected manifest filename based on your GitHub screenshot -->
   <link rel="manifest" href="favicon/site.webmanifest">
 
   <style>
@@ -122,11 +120,28 @@
     }
 
     .category-section { margin-bottom: 60px; }
-    .category-title {
-      font-size: 1.8rem;
-      margin-bottom: 30px;
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       border-bottom: 2px solid #e2e8f0;
       padding-bottom: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .category-title {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .sale-info {
+      font-size: 0.9rem;
+      color: var(--discount-color);
+      font-weight: 600;
+      background: #fff7ed;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid #ffedd5;
     }
 
     .product-grid {
@@ -182,8 +197,6 @@
     
     .price-container { margin-bottom: 20px; }
     .product-price { font-size: 1.3rem; color: var(--accent-green); font-weight: 800; }
-    .old-price { font-size: 0.95rem; color: var(--text-gray); text-decoration: line-through; margin-right: 8px; font-weight: 400; }
-    body.rtl .old-price { margin-right: 0; margin-left: 8px; }
 
     .btn-group { display: flex; flex-direction: column; gap: 8px; }
     .btn {
@@ -217,7 +230,6 @@
     <p class="slogan" id="slogan">Let's make the impossible possible</p>
   </div>
 
-  <!-- Contact Bar - Updated order and emojis as requested -->
   <div class="contact-bar">
     <a href="tel:0586780680" class="contact-link" id="contact-call">Call 📞</a>
     <a href="mailto:mm3dprinting613@gmail.com" class="contact-link" id="contact-email">Email ✉</a>
@@ -255,7 +267,8 @@ const translations = {
     tbd: "Price on Request",
     fourPack: "4 Pack",
     pesachSale: "PESACH SALE",
-    discountTag: "20% OFF",
+    discountTag: "20% OFF TOTAL",
+    saleInfo: "20% Discount applied to order total",
     catPesach: "Pesach",
     catFidget: "Fidget Toys",
     catKeyrings: "Keyrings",
@@ -278,7 +291,8 @@ const translations = {
     tbd: "מחיר לפי דרישה",
     fourPack: "מארז רביעייה",
     pesachSale: "מבצע פסח",
-    discountTag: "20% הנחה",
+    discountTag: "20% הנחה על הסה״כ",
+    saleInfo: "20% הנחה מחושבת על סך ההזמנה",
     catPesach: "פסח",
     catFidget: "צעצועי פידג'ט",
     catKeyrings: "מחזיקי מפתחות",
@@ -367,24 +381,23 @@ function renderCatalog() {
     const section = document.createElement('section');
     section.className = 'category-section';
     
+    const showSaleInfo = isSaleActive && cat.id === "Pesach";
+    
     let html = `
-      <h2 class="category-title">${translations[currentLang][cat.key]}</h2>
+      <div class="category-header">
+        <h2 class="category-title">${translations[currentLang][cat.key]}</h2>
+        ${showSaleInfo ? `<div class="sale-info">${translations[currentLang].saleInfo}</div>` : ''}
+      </div>
       <div class="product-grid">
     `;
     
     catProducts.forEach(product => {
       const name = currentLang === 'en' ? product.nameEn : product.nameHe;
-      const appliesDiscount = isSaleActive && product.cat === "Pesach";
+      const isPesachItem = cat.id === "Pesach";
       
       let priceHtml = '';
       if (product.price) {
-        if (appliesDiscount) {
-          const originalPrice = parseFloat(product.price);
-          const discountedPrice = (originalPrice * 0.8).toFixed(2);
-          priceHtml = `<span class="old-price">₪${product.price}</span><span class="product-price">₪${discountedPrice}</span>`;
-        } else {
-          priceHtml = `<span class="product-price">₪${product.price}</span>`;
-        }
+        priceHtml = `<span class="product-price">₪${product.price}</span>`;
       } else {
         priceHtml = `<span class="product-price">${translations[currentLang].tbd}</span>`;
       }
@@ -397,7 +410,7 @@ function renderCatalog() {
       html += `
         <div class="product-card">
           ${product.ribbon ? `<div class="ribbon">${translations[currentLang][product.ribbon]}</div>` : ''}
-          ${appliesDiscount ? `<div class="discount-badge">${translations[currentLang].discountTag}</div>` : ''}
+          ${(isSaleActive && isPesachItem) ? `<div class="discount-badge">${translations[currentLang].discountTag}</div>` : ''}
           <div class="product-img-container">
             <img src="${imgSrc}" class="product-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/400?text=${encodeURIComponent(name)}';">
           </div>
