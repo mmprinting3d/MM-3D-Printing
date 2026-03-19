@@ -251,7 +251,8 @@ function showFallbackLogo() {
   document.getElementById('logo-svg').style.display = 'block';
 }
 
-const SALE_END_DATE = new Date('2026-04-02T00:00:00');
+// Sale ends exactly on April 1st, 2026
+const SALE_END_DATE = new Date('2026-04-01T00:00:00');
 
 const translations = {
   en: {
@@ -381,7 +382,8 @@ function renderCatalog() {
     const section = document.createElement('section');
     section.className = 'category-section';
     
-    const showSaleInfo = isSaleActive && cat.id === "Pesach";
+    const isPesachCategory = cat.id === "Pesach";
+    const showSaleInfo = isSaleActive && isPesachCategory;
     
     let html = `
       <div class="category-header">
@@ -393,7 +395,6 @@ function renderCatalog() {
     
     catProducts.forEach(product => {
       const name = currentLang === 'en' ? product.nameEn : product.nameHe;
-      const isPesachItem = cat.id === "Pesach";
       
       let priceHtml = '';
       if (product.price) {
@@ -410,7 +411,7 @@ function renderCatalog() {
       html += `
         <div class="product-card">
           ${product.ribbon ? `<div class="ribbon">${translations[currentLang][product.ribbon]}</div>` : ''}
-          ${(isSaleActive && isPesachItem) ? `<div class="discount-badge">${translations[currentLang].discountTag}</div>` : ''}
+          ${(isSaleActive && isPesachCategory) ? `<div class="discount-badge">${translations[currentLang].discountTag}</div>` : ''}
           <div class="product-img-container">
             <img src="${imgSrc}" class="product-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/400?text=${encodeURIComponent(name)}';">
           </div>
