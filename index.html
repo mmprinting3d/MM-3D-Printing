@@ -13,6 +13,7 @@
       --text-gray: #64748b;
       --bg-gray: #f8fafc;
       --ribbon-color: #ef4444;
+      --discount-color: #f97316;
       --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     }
 
@@ -122,14 +123,33 @@
       border-radius: 5px;
       z-index: 2;
     }
+
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--discount-color);
+      color: white;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 5px;
+      z-index: 2;
+    }
+
     body.rtl .ribbon { left: auto; right: 10px; }
+    body.rtl .discount-badge { right: auto; left: 10px; }
 
     .product-img-container { width: 100%; aspect-ratio: 1/1; background: #f1f5f9; }
     .product-img { width: 100%; height: 100%; object-fit: cover; }
 
     .product-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
     .product-name { font-size: 1.1rem; font-weight: 700; margin: 0 0 10px 0; min-height: 2.8em; }
-    .product-price { font-size: 1.3rem; color: var(--accent-green); font-weight: 800; margin-bottom: 20px; }
+    
+    .price-container { margin-bottom: 20px; }
+    .product-price { font-size: 1.3rem; color: var(--accent-green); font-weight: 800; }
+    .old-price { font-size: 0.95rem; color: var(--text-gray); text-decoration: line-through; margin-right: 8px; font-weight: 400; }
+    body.rtl .old-price { margin-right: 0; margin-left: 8px; }
 
     .btn-group { display: flex; flex-direction: column; gap: 8px; }
     .btn {
@@ -176,6 +196,9 @@
 <script>
 let currentLang = 'en';
 
+// Sale configuration
+const SALE_END_DATE = new Date('2026-04-01T00:00:00');
+
 const translations = {
   en: {
     slogan: "Let's make the impossible possible",
@@ -186,6 +209,7 @@ const translations = {
     footer: "© 2026 MM 3D Printing. All Rights Reserved.",
     tbd: "Price on Request",
     fourPack: "4 Pack",
+    pesachSale: "PESACH SALE",
     catPesach: "Pesach",
     catFidget: "Fidget Toys",
     catKeyrings: "Keyrings",
@@ -204,6 +228,7 @@ const translations = {
     footer: "© 2026 MM 3D Printing. כל הזכויות שמורות.",
     tbd: "מחיר לפי דרישה",
     fourPack: "מארז רביעייה",
+    pesachSale: "מבצע פסח",
     catPesach: "פסח",
     catFidget: "צעצועי פידג'ט",
     catKeyrings: "מחזיקי מפתחות",
@@ -229,6 +254,7 @@ const categories = [
 const products = [
   { nameEn: "Chametz-Free sign", nameHe: "שלט חדר זה נקי לפסח", price: "60.00", cat: "Pesach", ext: "jpeg", ribbon: "fourPack" },
   { nameEn: "Omer calendar", nameHe: "לוח ספירת העומר", price: "65.00", cat: "Pesach", ext: "png" },
+  { nameEn: "Scrub daddy stand", nameHe: "מעמד לספוג Scrub Daddy", price: "30.00", cat: "Pesach", ext: "png" },
   { nameEn: "Bag Handle", nameHe: "ידית נשיאה לשקיות", price: "30.00", cat: "Shopping", ext: "png" },
   { nameEn: "Car Seat Hook", nameHe: "מתלה לרכב", price: "25.00", cat: "Shopping", ext: "png" },
   { nameEn: "Shopping Cart Coin + Keychain Case", nameHe: "מחזיק מטבע לעגלת קניות", price: "10.00", cat: "Shopping", ext: "png" },
@@ -257,8 +283,7 @@ const products = [
   { nameEn: "Universal card case", nameHe: "נרתיק כרטיסים אוניברסלי", price: "30.00", cat: "Travel", ext: "png" },
   { nameEn: "Folding Comb", nameHe: "מסרק מתקפל", price: "24.00", cat: "Travel", ext: "png" },
   { nameEn: "Toothbrush Travel Case", nameHe: "נרתיק למברשת שיניים לנסיעה", price: "15.00", cat: "Travel", ext: "png" },
-  { nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק למשאבת הזנה אינפיניטי", price: "60.00", cat: "Tools", ext: "png" },
-  { nameEn: "Scrub daddy stand", nameHe: "מעמד לספוג Scrub Daddy", price: "30.00", cat: "Tools", ext: "png" }
+  { nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק למשאבת הזנה אינפיניטי", price: "60.00", cat: "Tools", ext: "png" }
 ];
 
 function setLanguage(lang) {
@@ -276,6 +301,10 @@ function renderCatalog() {
   if (!container) return;
   container.innerHTML = '';
 
+  // Check if sale is currently active based on system date
+  const now = new Date();
+  const isSaleActive = now < SALE_END_DATE;
+
   categories.forEach(cat => {
     const catProducts = products.filter(p => p.cat === cat.id);
     if (catProducts.length === 0) return;
@@ -290,7 +319,21 @@ function renderCatalog() {
     
     catProducts.forEach(product => {
       const name = currentLang === 'en' ? product.nameEn : product.nameHe;
-      const displayPrice = product.price ? "₪" + product.price : translations[currentLang].tbd;
+      const appliesDiscount = isSaleActive && product.cat === "Pesach";
+      
+      let priceHtml = '';
+      if (product.price) {
+        if (appliesDiscount) {
+          const originalPrice = parseFloat(product.price);
+          const discountedPrice = (originalPrice * 0.8).toFixed(2);
+          priceHtml = `<span class="old-price">₪${product.price}</span><span class="product-price">₪${discountedPrice}</span>`;
+        } else {
+          priceHtml = `<span class="product-price">₪${product.price}</span>`;
+        }
+      } else {
+        priceHtml = `<span class="product-price">${translations[currentLang].tbd}</span>`;
+      }
+
       const waUrl = "https://wa.me/97226527074?text=" + encodeURIComponent(translations[currentLang].waMsg + name);
       const emailUrl = "mailto:mm3dprinting613@gmail.com?subject=" + encodeURIComponent(translations[currentLang].emailSub + name);
       
@@ -299,12 +342,13 @@ function renderCatalog() {
       html += `
         <div class="product-card">
           ${product.ribbon ? `<div class="ribbon">${translations[currentLang][product.ribbon]}</div>` : ''}
+          ${appliesDiscount ? `<div class="discount-badge">20% OFF</div>` : ''}
           <div class="product-img-container">
             <img src="${imgSrc}" class="product-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/400?text=${encodeURIComponent(name)}';">
           </div>
           <div class="product-details">
             <h3 class="product-name">${name}</h3>
-            <p class="product-price">${displayPrice}</p>
+            <div class="price-container">${priceHtml}</div>
             <div class="btn-group">
               <a href="${waUrl}" target="_blank" class="btn btn-whatsapp">${translations[currentLang].orderWa}</a>
               <a href="${emailUrl}" class="btn btn-email">${translations[currentLang].orderEmail}</a>
