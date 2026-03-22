@@ -5,15 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catalog | MM 3D Printing</title>
 
-  <!-- Open Graph / WhatsApp / Facebook / Social Media Meta Tags -->
+  <!-- Open Graph / WhatsApp / Facebook Meta Tags -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mmprinting3d.github.io/MM-3-D-Printing/">
   <meta property="og:title" content="MM 3D Printing | Catalog">
   <meta property="og:description" content="Let's make the impossible possible. Check out our 3D printed products and accessories.">
-  <meta property="og:image" content="https://mmprinting3d.github.io/MM-3-D-Printing/images/logo.png">
+  
+  <!-- Image Path: Pointing to your GitHub repo logo -->
+  <meta property="og:image" content="https://mmprinting3d.github.io/MM-3D-Printing/images/logo.png">
+  <meta property="og:image:secure_url" content="https://mmprinting3d.github.io/MM-3D-Printing/images/logo.png">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="500">
-  <meta property="og:image:height" content="500">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card backup -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MM 3D Printing | Catalog">
+  <meta name="twitter:description" content="Let's make the impossible possible. Check out our 3D printed products and accessories.">
+  <meta name="twitter:image" content="https://mmprinting3d.github.io/MM-3D-Printing/images/logo.png">
 
   <!-- Favicon setup -->
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
@@ -261,7 +270,6 @@ function showFallbackLogo() {
   document.getElementById('logo-svg').style.display = 'block';
 }
 
-// Sale ends exactly on April 1st, 2026
 const SALE_END_DATE = new Date('2026-04-01T00:00:00');
 
 const translations = {
@@ -366,14 +374,11 @@ function setLanguage(lang) {
   document.body.className = lang === 'he' ? 'rtl' : '';
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('btn-he').classList.toggle('active', lang === 'he');
-  
   document.getElementById('slogan').innerText = translations[lang].slogan;
   document.getElementById('footer-text').innerText = translations[lang].footer;
-  
   document.getElementById('contact-wa').innerText = translations[lang].contactWa;
   document.getElementById('contact-email').innerText = translations[lang].contactEmail;
   document.getElementById('contact-call').innerText = translations[lang].contactCall;
-  
   renderCatalog();
 }
 
@@ -381,20 +386,16 @@ function renderCatalog() {
   const container = document.getElementById('catalog-container');
   if (!container) return;
   container.innerHTML = '';
-
   const now = new Date();
   const isSaleActive = now < SALE_END_DATE;
 
   categories.forEach(cat => {
     const catProducts = products.filter(p => p.cat === cat.id);
     if (catProducts.length === 0) return;
-
     const section = document.createElement('section');
     section.className = 'category-section';
-    
     const isPesachCategory = cat.id === "Pesach";
     const showSaleInfo = isSaleActive && isPesachCategory;
-    
     let html = `
       <div class="category-header">
         <h2 class="category-title">${translations[currentLang][cat.key]}</h2>
@@ -402,22 +403,12 @@ function renderCatalog() {
       </div>
       <div class="product-grid">
     `;
-    
     catProducts.forEach(product => {
       const name = currentLang === 'en' ? product.nameEn : product.nameHe;
-      
-      let priceHtml = '';
-      if (product.price) {
-        priceHtml = `<span class="product-price">₪${product.price}</span>`;
-      } else {
-        priceHtml = `<span class="product-price">${translations[currentLang].tbd}</span>`;
-      }
-
+      let priceHtml = product.price ? `<span class="product-price">₪${product.price}</span>` : `<span class="product-price">${translations[currentLang].tbd}</span>`;
       const waUrl = "https://wa.me/97226527074?text=" + encodeURIComponent(translations[currentLang].waMsg + name);
       const emailUrl = "mailto:mm3dprinting613@gmail.com?subject=" + encodeURIComponent(translations[currentLang].emailSub + name);
-      
       const imgSrc = "images/" + product.nameEn + "." + (product.ext || "png");
-
       html += `
         <div class="product-card">
           ${product.ribbon ? `<div class="ribbon">${translations[currentLang][product.ribbon]}</div>` : ''}
@@ -436,7 +427,6 @@ function renderCatalog() {
         </div>
       `;
     });
-    
     html += '</div>';
     section.innerHTML = html;
     container.appendChild(section);
@@ -446,9 +436,7 @@ function renderCatalog() {
 window.onload = () => {
   setLanguage('en');
   const logo = document.getElementById('main-logo');
-  if (logo && logo.naturalWidth === 0) {
-    showFallbackLogo();
-  }
+  if (logo && logo.naturalWidth === 0) showFallbackLogo();
 };
 </script>
 </body>
