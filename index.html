@@ -42,9 +42,9 @@
     }
 
     .spinner {
-      border: 3px solid rgba(0, 0, 0, 0.1);
+      border: 3px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      border-top: 3px solid #0f172a;
+      border-top: 3px solid #ffffff;
       width: 24px;
       height: 24px;
       animation: spin 1s linear infinite;
@@ -55,35 +55,28 @@
       100% { transform: rotate(360deg); }
     }
 
-    .custom-checkbox:checked {
-      background-color: #22c55e;
-      border-color: #22c55e;
-    }
-
-    select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right 0.5rem center;
-      background-repeat: no-repeat;
-      background-size: 1.5em 1.5em;
-      padding-right: 2.5rem;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-    }
-    .rtl select {
-      background-position: left 0.5rem center;
-      padding-right: 0.75rem;
-      padding-left: 2.5rem;
-    }
-
-    /* Multi-color gradient for the Tri-color option */
     .bg-tricolor {
-      background: linear-gradient(135deg, #000 33%, #f00 33%, #f00 66%, #ffd700 66%);
+      background: linear-gradient(135deg, #000 33%, #f00 33%, #f00 66%, #ffd700 66%) !important;
+    }
+
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 transition-colors duration-300">
 
+<!-- Navigation & Controls -->
 <div class="fixed top-4 left-4 right-4 flex justify-between items-center z-50 pointer-events-none">
   <div class="pointer-events-auto flex gap-2">
       <button onclick="setLanguage('en')" id="btn-en" class="px-4 py-2 rounded-full glass-morphism shadow-sm font-bold text-sm border border-slate-200">EN</button>
@@ -107,15 +100,18 @@
 </header>
 
 <main class="container mx-auto px-4 pb-12">
+  <!-- Catalog View -->
   <div id="view-catalog" class="space-y-12"></div>
 
-  <div id="view-product" class="hidden">
-    <button onclick="showCatalog()" class="mb-6 flex items-center gap-2 text-slate-600 hover:text-slate-900 font-semibold">
-      <i class="fas fa-arrow-left"></i> <span id="btn-back">Back to Catalog</span>
+  <!-- Product Detail View -->
+  <div id="view-product" class="hidden max-w-5xl mx-auto">
+    <button onclick="showCatalog()" class="mb-6 flex items-center gap-2 text-slate-600 hover:text-slate-900 font-semibold group">
+      <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> <span id="btn-back">Back to Catalog</span>
     </button>
-    <div id="product-detail-content" class="bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-8"></div>
+    <div id="product-detail-content" class="bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-0 border border-slate-100"></div>
   </div>
 
+  <!-- Contact Section -->
   <section class="mt-24 border-t border-slate-200 pt-20 max-w-2xl mx-auto">
     <div class="text-center mb-10">
       <h2 class="text-3xl font-bold mb-2" id="contact-title">Contact Us</h2>
@@ -154,11 +150,12 @@
   </section>
 </main>
 
-<div id="cart-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex justify-end">
-  <div class="w-full max-w-md bg-white h-full shadow-2xl flex flex-col">
+<!-- Cart Sidebar Overlay -->
+<div id="cart-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex justify-end transition-opacity duration-300">
+  <div class="w-full max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-0">
     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
       <h2 class="text-xl font-bold" id="cart-title">Your Order</h2>
-      <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-900"><i class="fas fa-times text-xl"></i></button>
+      <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-900 w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50"><i class="fas fa-times text-xl"></i></button>
     </div>
     
     <div id="cart-content-area" class="flex-grow overflow-y-auto">
@@ -167,8 +164,8 @@
       </div>
 
       <div id="cart-screen-form" class="hidden p-6 space-y-4">
-        <button onclick="switchCartScreen('items')" class="text-sm font-bold text-slate-500 hover:text-slate-900 mb-2 block">
-           <i class="fas fa-chevron-left mr-1"></i> <span id="btn-edit-cart">Edit Items</span>
+        <button onclick="switchCartScreen('items')" class="text-sm font-bold text-slate-500 hover:text-slate-900 mb-2 inline-flex items-center gap-1 group">
+           <i class="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i> <span id="btn-edit-cart">Edit Items</span>
         </button>
         <h3 class="text-lg font-bold mb-4" id="form-title">Checkout Information</h3>
         
@@ -186,11 +183,11 @@
           
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-400 px-1" id="label-phone">PHONE NUMBER</label>
-            <input type="tel" name="Phone" id="cust-phone" placeholder="e.g. 050-1234567" pattern="[0-9\-+ ]{9,15}" title="Please enter a valid phone number" class="w-full p-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-green-500" required>
+            <input type="tel" name="Phone" id="cust-phone" placeholder="e.g. 050-1234567" pattern="[0-9\-+ ]{9,15}" class="w-full p-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-green-500" required>
           </div>
 
           <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <input type="checkbox" name="WhatsApp" id="cust-wa" class="w-5 h-5 rounded text-green-500 focus:ring-green-500 custom-checkbox" checked>
+            <input type="checkbox" name="WhatsApp" id="cust-wa" class="w-5 h-5 rounded text-green-500 focus:ring-green-500" checked>
             <label for="cust-wa" class="text-sm font-medium text-slate-700 cursor-pointer flex items-center gap-2">
               <i class="fab fa-whatsapp text-green-500 text-lg"></i> <span id="label-wa-tick">Contact me on WhatsApp</span>
             </label>
@@ -203,7 +200,7 @@
 
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-400 px-1" id="label-delivery">DELIVERY LOCATION</label>
-            <select name="DeliveryType" id="delivery-select" onchange="updateCartUI()" class="w-full p-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-green-500">
+            <select name="DeliveryType" id="delivery-select" onchange="updateCartUI()" class="w-full p-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-green-500 appearance-none bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e')] bg-no-repeat bg-right-3 pr-10">
               <option value="pickup" data-fee="0">Self Pickup (Jerusalem)</option>
               <option value="harnof" data-fee="15">Har Nof (+₪15)</option>
               <option value="knaf_nesharim" data-fee="20">Kanfei Nesharim, Givat Shaul, Kiryat Moshe (+₪20)</option>
@@ -253,7 +250,7 @@
       </div>
       
       <div id="cart-actions-items">
-        <button onclick="switchCartScreen('form')" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
+        <button onclick="switchCartScreen('form')" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none" id="btn-checkout-start">
           <span id="btn-next">Checkout</span> <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -278,7 +275,6 @@ let currentLang = 'en';
 let cart = [];
 const FORMSPREE_ID = "xwvwobwp"; 
 
-// Added specific hex codes for preview circles
 const availableColors = [
   { id: "yellow", en: "Yellow", he: "צהוב", hex: "#fbbf24" },
   { id: "black", en: "Black", he: "שחור", hex: "#000000" },
@@ -292,78 +288,15 @@ const availableColors = [
 ];
 
 const products = [
-  { 
-    id: 1, 
-    nameEn: "Bottle Dryer Rack + Holder", 
-    nameHe: "מתקן ייבוש ומחזיק לבקבוקים", 
-    descEn: "A heavy-duty rack designed to safely dry bottles and keep your counter organized.",
-    descHe: "מעמד חזק לייבוש בקבוקים ושמירה על סדר במטבח.",
-    price: 50.00, cat: "Kitchen", img: "Bottle Dryer.png" 
-  },
-  { 
-    id: 2, 
-    nameEn: "Cleaning Spray Holder", 
-    nameHe: "מחזיק לספריי ניקוי", 
-    descEn: "Wall-mountable or cabinet holder for all standard cleaning spray bottles.",
-    descHe: "מחזיק לתלייה על הקיר או בתוך ארון עבור כל סוגי השפריצרים.",
-    price: 25.00, cat: "Kitchen", img: "Spray Holder.png" 
-  },
-  { 
-    id: 3, 
-    nameEn: "Food Bag Clips", 
-    nameHe: "תופסנים לשקיות אוכל", 
-    descEn: "Pack of durable clips to keep your snacks and ingredients fresh for longer.",
-    descHe: "סט תופסנים עמידים לשמירה על טריות השקיות במזווה.",
-    price: 30.00, cat: "Kitchen", img: "Clips.png" 
-  },
-  { 
-    id: 4, 
-    nameEn: "Scrub daddy stand", 
-    nameHe: "מעמד לספוג Scrub Daddy", 
-    descEn: "The perfect ventilated home for your favorite smiley sponge.",
-    descHe: "המעמד המושלם והמאוורר לספוג המועדף עליכם.",
-    price: 30.00, cat: "Kitchen", img: "Scrub daddy stand.png" 
-  },
-  { 
-    id: 5, 
-    nameEn: "Ultimate Spoon Rest", 
-    nameHe: "מחזיק כף מושלם", 
-    descEn: "Heat-resistant and easy to clean, keeping your stove-top mess-free.",
-    descHe: "עמיד בחום וקל לניקוי, שומר על הכיריים נקיות בזמן הבישול.",
-    price: 30.00, cat: "Kitchen", img: "Ultimate Spoon Rest.png" 
-  },
-  { 
-    id: 6, 
-    nameEn: "Chametz-Free sign", 
-    nameHe: "שלט חדר זה נקי לפסח", 
-    descEn: "Durable and stylish signage to mark clean rooms during the holiday.",
-    descHe: "שלט מעוצב ועמיד לסימון חדרים שכבר נוקו לפסח.",
-    price: 60.00, cat: "Pesach", img: "Chametz-Free sign.jpeg" 
-  },
-  { 
-    id: 7, 
-    nameEn: "Fidget dragon", 
-    nameHe: "דרקון פידג'ט", 
-    descEn: "Articulated 3D printed dragon that moves smoothly in your hands.",
-    descHe: "דרקון מפרקי מודפס בתלת מימד שנע בצורה חלקה וכיפית בידיים.",
-    price: 30.00, cat: "Fidget", img: "Fidget dragon.png" 
-  },
-  { 
-    id: 8, 
-    nameEn: "770 tzedakah box", 
-    nameHe: "קופת צדקה 770", 
-    descEn: "A beautiful replica of the iconic 770 Eastern Parkway building.",
-    descHe: "העתק מרהיב של בניין ה-770 המפורסם המשמש כקופת צדקה.",
-    price: 77.00, cat: "Tzedakah", img: "770 tzedakah box.png" 
-  },
-  { 
-    id: 9, 
-    nameEn: "Infinity Feeding pump holder", 
-    nameHe: "מחזיק למשאבת הזנה אינפיניטי", 
-    descEn: "Custom stable mount for secure holding of medical feeding pumps.",
-    descHe: "מתקן ייעודי ויציב לאחיזה בטוחה של משאבת הזנה רפואית.",
-    price: 60.00, cat: "Tools", img: "Infinity Feeding pump holder.png" 
-  }
+  { id: 1, nameEn: "Bottle Dryer Rack + Holder", nameHe: "מתקן ייבוש ומחזיק לבקבוקים", descEn: "A heavy-duty rack designed to safely dry bottles and keep your counter organized.", descHe: "מעמד חזק לייבוש בקבוקים ושמירה על סדר במטבח.", price: 50.00, cat: "Kitchen", img: "Bottle Dryer.png" },
+  { id: 2, nameEn: "Cleaning Spray Holder", nameHe: "מחזיק לספריי ניקוי", descEn: "Wall-mountable or cabinet holder for all standard cleaning spray bottles.", descHe: "מחזיק לתלייה על הקיר או בתוך ארון עבור כל סוגי השפריצרים.", price: 25.00, cat: "Kitchen", img: "Spray Holder.png" },
+  { id: 3, nameEn: "Food Bag Clips", nameHe: "תופסנים לשקיות אוכל", descEn: "Pack of durable clips to keep your snacks and ingredients fresh for longer.", descHe: "סט תופסנים עמידים לשמירה על טריות השקיות במזווה.", price: 30.00, cat: "Kitchen", img: "Clips.png" },
+  { id: 4, nameEn: "Scrub daddy stand", nameHe: "מעמד לספוג Scrub Daddy", descEn: "The perfect ventilated home for your favorite smiley sponge.", descHe: "המעמד המושלם והמאוורר לספוג המועדף עליכם.", price: 30.00, cat: "Kitchen", img: "Scrub daddy stand.png" },
+  { id: 5, nameEn: "Ultimate Spoon Rest", nameHe: "מחזיק כף מושלם", descEn: "Heat-resistant and easy to clean, keeping your stove-top mess-free.", descHe: "עמיד בחום וקל לניקוי, שומר על הכיריים נקיות בזמן הבישול.", price: 30.00, cat: "Kitchen", img: "Ultimate Spoon Rest.png" },
+  { id: 6, nameEn: "Chametz-Free sign", nameHe: "שלט חדר זה נקי לפסח", descEn: "Durable and stylish signage to mark clean rooms during the holiday.", descHe: "שלט מעוצב ועמיד לסימון חדרים שכבר נוקו לפסח.", price: 60.00, cat: "Pesach", img: "Chametz-Free sign.jpeg" },
+  { id: 7, nameEn: "Fidget dragon", nameHe: "דרקון פידג'ט", descEn: "Articulated 3D printed dragon that moves smoothly in your hands.", descHe: "דרקון מפרקי מודפס בתלת מימד שנע בצורה חלקה וכיפית בידיים.", price: 30.00, cat: "Fidget", img: "Fidget dragon.png" },
+  { id: 8, nameEn: "770 tzedakah box", nameHe: "קופת צדקה 770", descEn: "A beautiful replica of the iconic 770 Eastern Parkway building.", descHe: "העתק מרהיב של בניין ה-770 המפורסם המשמש כקופת צדקה.", price: 77.00, cat: "Tzedakah", img: "770 tzedakah box.png" },
+  { id: 9, nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק למשאבת הזנה אינפיניטי", descEn: "Custom stable mount for secure holding of medical feeding pumps.", descHe: "מתקן ייעודי ויציב לאחיזה בטוחה של משאבת הזנה רפואית.", price: 60.00, cat: "Tools", img: "Infinity Feeding pump holder.png" }
 ];
 
 const categories = [
@@ -376,144 +309,71 @@ const categories = [
 
 const ui = {
   en: {
-    slogan: "Let's make the impossible possible",
-    back: "Back to Catalog",
-    addToCart: "Add to Cart",
-    cart: "Your Order",
-    total: "Total Price:",
-    next: "Checkout",
-    edit: "Edit Items",
-    formTitle: "Checkout Details",
-    deliveryLabel: "Delivery Location",
-    empty: "Your cart is empty",
-    placeOrder: "Place Order",
-    successTitle: "Order Received!",
-    successMsg: "Thank you! We will contact you soon to confirm timing.",
-    disclaimer: "Final price includes shipping and materials.",
-    footer: "© 2026 MM 3D Printing. All Rights Reserved.",
-    colorLabel: "Select Color:",
-    closeBtn: "Close",
-    orderNum: "Order Number",
-    contact: {
-      title: "Contact Us",
-      subtitle: "Have a question or a custom request? Send us a message!",
-      name: "Full Name",
-      email: "Email Address",
-      msg: "Message",
-      send: "Send Message",
-      successTitle: "Message Sent!",
-      successMsg: "We'll get back to you as soon as possible.",
-      another: "Send another message"
-    },
-    labels: { 
-      name: "FIRST NAME", 
-      family: "FAMILY NAME",
-      phone: "PHONE NUMBER", 
-      email: "EMAIL ADDRESS",
-      wa: "Contact me on WhatsApp",
-      delivery: "DELIVERY LOCATION", 
-      street: "STREET & HOUSE NUMBER",
-      apt: "APARTMENT / FLOOR"
-    }
+    slogan: "Let's make the impossible possible", back: "Back to Catalog", addToCart: "Add to Cart",
+    cart: "Your Order", total: "Total Price:", next: "Checkout", edit: "Edit Items",
+    formTitle: "Checkout Details", deliveryLabel: "Delivery Location", empty: "Your cart is empty",
+    placeOrder: "Place Order", successTitle: "Order Received!", successMsg: "Thank you! We will contact you soon to confirm timing.",
+    disclaimer: "Final price includes shipping and materials.", footer: "© 2026 MM 3D Printing. All Rights Reserved.",
+    colorLabel: "Select Color", qtyLabel: "Quantity", closeBtn: "Close", orderNum: "Order Number",
+    contact: { title: "Contact Us", subtitle: "Have a question or a custom request? Send us a message!", name: "Full Name", email: "Email Address", msg: "Message", send: "Send Message", successTitle: "Message Sent!", successMsg: "We'll get back to you as soon as possible.", another: "Send another message" },
+    labels: { name: "FIRST NAME", family: "FAMILY NAME", phone: "PHONE NUMBER", email: "EMAIL ADDRESS", wa: "Contact me on WhatsApp", delivery: "DELIVERY LOCATION", street: "STREET & HOUSE NUMBER", apt: "APARTMENT / FLOOR" }
   },
   he: {
-    slogan: "בואו נהפוך את הבלתי אפשרי לאפשרי",
-    back: "חזרה לקטלוג",
-    addToCart: "הוסף לסל",
-    cart: "ההזמנה שלך",
-    total: "מחיר סופי:",
-    next: "לקופה",
-    edit: "ערוך מוצרים",
-    formTitle: "פרטי הזמנה",
-    deliveryLabel: "מיקום למשלוח",
-    empty: "הסל שלך ריק",
-    placeOrder: "שלח הזמנה",
-    successTitle: "ההזמנה התקבלה!",
-    successMsg: "תודה! ניצור איתך קשר בהקדם לאישור זמני אספקה.",
-    disclaimer: "המחיר הסופי כולל משלוח וחומרים.",
-    footer: "© 2026 MM 3D Printing. כל הזכויות שמורות.",
-    colorLabel: "בחר צבע:",
-    closeBtn: "סגור",
-    orderNum: "מספר הזמנה",
-    contact: {
-      title: "צור קשר",
-      subtitle: "יש לכם שאלה או בקשה מיוחדת? שלחו לנו הודעה!",
-      name: "שם מלא",
-      email: "אימייל",
-      msg: "הודעה",
-      send: "שלח הודעה",
-      successTitle: "ההודעה נשלחה!",
-      successMsg: "נחזור אליכם בהקדם האפשרי.",
-      another: "שלח הודעה נוספת"
-    },
-    labels: { 
-      name: "שם פרטי", 
-      family: "שם משפחה",
-      phone: "מספר טלפון", 
-      email: "כתובת אימייל",
-      wa: "צרו איתי קשר בוואטסאפ",
-      delivery: "מיקום למשלוח", 
-      street: "רחוב ומספר בית",
-      apt: "דירה / קומה"
-    }
+    slogan: "בואו נהפוך את הבלתי אפשרי לאפשרי", back: "חזרה לקטלוג", addToCart: "הוסף לסל",
+    cart: "ההזמנה שלך", total: "מחיר סופי:", next: "לקופה", edit: "ערוך מוצרים",
+    formTitle: "פרטי הזמנה", deliveryLabel: "מיקום למשלוח", empty: "הסל שלך ריק",
+    placeOrder: "שלח הזמנה", successTitle: "ההזמנה התקבלה!", successMsg: "תודה! ניצור איתך קשר בהקדם לאישור זמני אספקה.",
+    disclaimer: "המחיר הסופי כולל משלוח וחומרים.", footer: "© 2026 MM 3D Printing. כל הזכויות שמורות.",
+    colorLabel: "בחר צבע", qtyLabel: "כמות", closeBtn: "סגור", orderNum: "מספר הזמנה",
+    contact: { title: "צור קשר", subtitle: "יש לכם שאלה או בקשה מיוחדת? שלחו לנו הודעה!", name: "שם מלא", email: "אימייל", msg: "הודעה", send: "שלח הודעה", successTitle: "ההודעה נשלחה!", successMsg: "נחזור אליכם בהקדם האפשרי.", another: "שלח הודעה נוספת" },
+    labels: { name: "שם פרטי", family: "שם משפחה", phone: "מספר טלפון", email: "כתובת אימייל", wa: "צרו איתי קשר בוואטסאפ", delivery: "מיקום למשלוח", street: "רחוב ומספר בית", apt: "דירה / קומה" }
   }
 };
 
 function setLanguage(lang) {
   currentLang = lang;
   document.body.className = lang === 'he' ? 'rtl' : '';
-  
-  document.getElementById('slogan').innerText = ui[lang].slogan;
-  document.getElementById('btn-back').innerText = ui[lang].back;
-  document.getElementById('cart-title').innerText = ui[lang].cart;
-  document.getElementById('total-label').innerText = ui[lang].total;
-  document.getElementById('btn-next').innerText = ui[lang].next;
-  document.getElementById('btn-edit-cart').innerText = ui[lang].edit;
-  document.getElementById('form-title').innerText = ui[lang].formTitle;
-  document.getElementById('disclaimer').innerText = ui[lang].disclaimer;
-  document.getElementById('footer-text').innerText = ui[lang].footer;
-  document.getElementById('btn-place-order').innerText = ui[lang].placeOrder;
-  document.getElementById('success-title').innerText = ui[lang].successTitle;
-  document.getElementById('success-msg').innerText = ui[lang].successMsg;
-  document.getElementById('btn-close').innerText = ui[lang].closeBtn;
-  document.getElementById('label-order-num-ui').innerText = ui[lang].orderNum;
-
-  document.getElementById('contact-title').innerText = ui[lang].contact.title;
-  document.getElementById('contact-subtitle').innerText = ui[lang].contact.subtitle;
-  document.getElementById('contact-label-name').innerText = ui[lang].contact.name;
-  document.getElementById('contact-label-email').innerText = ui[lang].contact.email;
-  document.getElementById('contact-label-msg').innerText = ui[lang].contact.msg;
-  document.getElementById('btn-send-msg').innerText = ui[lang].contact.send;
-  document.getElementById('contact-success-title').innerText = ui[lang].contact.successTitle;
-  document.getElementById('contact-success-msg').innerText = ui[lang].contact.successMsg;
-  document.getElementById('btn-send-another').innerText = ui[lang].contact.another;
-  
-  document.getElementById('label-name').innerText = ui[lang].labels.name;
-  document.getElementById('label-family').innerText = ui[lang].labels.family;
-  document.getElementById('label-phone').innerText = ui[lang].labels.phone;
-  document.getElementById('label-email').innerText = ui[lang].labels.email;
-  document.getElementById('label-wa-tick').innerText = ui[lang].labels.wa;
-  document.getElementById('label-delivery').innerText = ui[lang].labels.delivery;
-  document.getElementById('label-street').innerText = ui[lang].labels.street;
-  document.getElementById('label-apt').innerText = ui[lang].labels.apt;
-
+  const set = (id, text) => { if(document.getElementById(id)) document.getElementById(id).innerText = text; };
+  set('slogan', ui[lang].slogan);
+  set('btn-back', ui[lang].back);
+  set('cart-title', ui[lang].cart);
+  set('total-label', ui[lang].total);
+  set('btn-next', ui[lang].next);
+  set('btn-edit-cart', ui[lang].edit);
+  set('form-title', ui[lang].formTitle);
+  set('disclaimer', ui[lang].disclaimer);
+  set('footer-text', ui[lang].footer);
+  set('btn-place-order', ui[lang].placeOrder);
+  set('success-title', ui[lang].successTitle);
+  set('success-msg', ui[lang].successMsg);
+  set('btn-close', ui[lang].closeBtn);
+  set('label-order-num-ui', ui[lang].orderNum);
+  set('contact-title', ui[lang].contact.title);
+  set('contact-subtitle', ui[lang].contact.subtitle);
+  set('contact-label-name', ui[lang].contact.name);
+  set('contact-label-email', ui[lang].contact.email);
+  set('contact-label-msg', ui[lang].contact.msg);
+  set('btn-send-msg', ui[lang].contact.send);
+  set('contact-success-title', ui[lang].contact.successTitle);
+  set('contact-success-msg', ui[lang].contact.successMsg);
+  set('btn-send-another', ui[lang].contact.another);
+  set('label-name', ui[lang].labels.name);
+  set('label-family', ui[lang].labels.family);
+  set('label-phone', ui[lang].labels.phone);
+  set('label-email', ui[lang].labels.email);
+  set('label-wa-tick', ui[lang].labels.wa);
+  set('label-delivery', ui[lang].labels.delivery);
+  set('label-street', ui[lang].labels.street);
+  set('label-apt', ui[lang].labels.apt);
   const deliverySelect = document.getElementById('delivery-select');
-  if (lang === 'he') {
-    deliverySelect.options[0].text = "איסוף עצמי (ירושלים)";
-    deliverySelect.options[1].text = "הר נוף (+₪15)";
-    deliverySelect.options[2].text = "כנפי נשרים, גבעת שאול, קריית משה (+₪20)";
-    deliverySelect.options[3].text = "בית וגן, רוממה, מקור ברוך (+₪30)";
-  } else {
-    deliverySelect.options[0].text = "Self Pickup (Jerusalem)";
-    deliverySelect.options[1].text = "Har Nof (+₪15)";
-    deliverySelect.options[2].text = "Kanfei Nesharim, Givat Shaul, Kiryat Moshe (+₪20)";
-    deliverySelect.options[3].text = "Bayit V'Gan, Romema, Makor Baruch (+₪30)";
-  }
-
+  const dTexts = lang === 'he' ? 
+    ["איסוף עצמי (ירושלים)", "הר נוף (+₪15)", "כנפי נשרים, גבעת שאול (+₪20)", "בית וגן, רוממה (+₪30)"] :
+    ["Self Pickup (Jerusalem)", "Har Nof (+₪15)", "Knaf Nesharim (+₪20)", "Bayit V'Gan (+₪30)"];
+  for(let i=0; i<4; i++) deliverySelect.options[i].text = dTexts[i];
   document.getElementById('btn-en').className = `px-4 py-2 rounded-full glass-morphism shadow-sm font-bold text-sm border ${lang==='en'?'bg-slate-900 text-white':'border-slate-200'}`;
   document.getElementById('btn-he').className = `px-4 py-2 rounded-full glass-morphism shadow-sm font-bold text-sm border ${lang==='he'?'bg-slate-900 text-white':'border-slate-200'}`;
-
   renderCatalog();
+  updateCartUI();
 }
 
 function renderCatalog() {
@@ -530,7 +390,6 @@ function renderCatalog() {
           <div class="product-card group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col" onclick="showProduct(${p.id})">
             <div class="aspect-square bg-slate-100 overflow-hidden relative">
               <img src="images/${p.img}" alt="${p.nameEn}" class="product-image w-full h-full object-cover transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=${p.nameEn}'">
-              <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
             </div>
             <div class="p-4 flex-grow flex flex-col justify-between">
               <h3 class="font-bold text-sm md:text-base leading-tight">${currentLang === 'en' ? p.nameEn : p.nameHe}</h3>
@@ -547,56 +406,69 @@ function renderCatalog() {
 function updateColorPreview() {
   const select = document.getElementById('selected-color');
   const preview = document.getElementById('color-preview-circle');
+  if(!select || !preview) return;
   const colorId = select.value;
   const colorObj = availableColors.find(c => c.id === colorId);
-
-  // Clear existing specific classes
-  preview.className = "w-8 h-8 rounded-full border border-slate-200 shadow-inner flex-shrink-0";
+  preview.className = "w-8 h-8 rounded-full border border-slate-200 shadow-sm flex-shrink-0";
   preview.style.backgroundColor = "";
-
-  if (colorObj.hex === 'tricolor') {
-    preview.classList.add('bg-tricolor');
-  } else {
-    preview.style.backgroundColor = colorObj.hex;
-  }
+  if (colorObj.hex === 'tricolor') preview.classList.add('bg-tricolor');
+  else preview.style.backgroundColor = colorObj.hex;
 }
 
 function showProduct(id) {
   const p = products.find(prod => prod.id === id);
   const detail = document.getElementById('product-detail-content');
   const colorOptions = availableColors.map(c => `<option value="${c.id}">${currentLang === 'en' ? c.en : c.he}</option>`).join('');
-
   detail.innerHTML = `
-    <div class="p-4 md:p-8 bg-slate-50 flex items-center justify-center">
-      <img src="images/${p.img}" class="w-full h-auto rounded-2xl shadow-lg" alt="${p.nameEn}" onerror="this.src='https://via.placeholder.com/600?text=${p.nameEn}'">
+    <div class="p-4 md:p-8 bg-slate-50 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100">
+      <img src="images/${p.img}" class="w-full h-auto rounded-2xl shadow-lg max-h-[400px] object-contain" alt="${p.nameEn}" onerror="this.src='https://via.placeholder.com/600?text=${p.nameEn}'">
     </div>
-    <div class="p-8 flex flex-col justify-center">
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">${p.cat}</span>
-      <h2 class="text-3xl font-extrabold mb-2">${currentLang === 'en' ? p.nameEn : p.nameHe}</h2>
-      <p class="text-slate-500 mb-6">${currentLang === 'en' ? p.descEn : p.descHe}</p>
-      <p class="text-4xl text-green-600 font-black mb-8">₪${p.price.toFixed(2)}</p>
+    <div class="p-8 flex flex-col justify-center bg-white space-y-6">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1 block">${p.cat}</span>
+        <h2 class="text-3xl font-extrabold mb-2 leading-tight">${currentLang === 'en' ? p.nameEn : p.nameHe}</h2>
+        <p class="text-slate-500">${currentLang === 'en' ? p.descEn : p.descHe}</p>
+        <p class="text-4xl text-green-600 font-black mt-4">₪${p.price.toFixed(2)}</p>
+      </div>
       
-      <div class="mb-8">
-        <label class="block text-sm font-bold text-slate-700 mb-2">${ui[currentLang].colorLabel}</label>
-        <div class="flex items-center gap-4">
-          <div id="color-preview-circle" class="w-8 h-8 rounded-full border border-slate-200 shadow-inner flex-shrink-0"></div>
-          <select id="selected-color" onchange="updateColorPreview()" class="flex-grow p-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-green-500 appearance-none">
+      <!-- Select Color Row -->
+      <div class="space-y-2">
+        <label class="block text-sm font-bold text-slate-700">${ui[currentLang].colorLabel}</label>
+        <div class="color-picker-row">
+          <div id="color-preview-circle" class="w-10 h-10 rounded-full border border-slate-200 shadow-sm flex-shrink-0"></div>
+          <select id="selected-color" onchange="updateColorPreview()" class="flex-grow p-3 bg-slate-50 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 appearance-none bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e')] bg-no-repeat bg-right-3 pr-10">
             ${colorOptions}
           </select>
         </div>
       </div>
 
-      <button onclick="addToCart(${p.id}, event)" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg active:scale-95">
-        <i class="fas fa-plus mr-2"></i> ${ui[currentLang].addToCart}
+      <!-- Quantity Row -->
+      <div class="space-y-2">
+        <label class="block text-sm font-bold text-slate-700">${ui[currentLang].qtyLabel}</label>
+        <div class="flex items-center bg-slate-50 rounded-xl border border-slate-200 w-fit p-1">
+          <button onclick="adjustDetailQty(-1)" class="w-10 h-10 flex items-center justify-center hover:bg-white rounded-lg transition"><i class="fas fa-minus text-slate-400"></i></button>
+          <input type="number" id="selected-qty" value="1" min="1" max="99" class="w-12 text-center bg-transparent font-bold outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+          <button onclick="adjustDetailQty(1)" class="w-10 h-10 flex items-center justify-center hover:bg-white rounded-lg transition"><i class="fas fa-plus text-slate-400"></i></button>
+        </div>
+      </div>
+
+      <button onclick="addToCart(${p.id}, event)" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg active:scale-95 flex items-center justify-center gap-2">
+        <i class="fas fa-shopping-basket text-sm"></i> ${ui[currentLang].addToCart}
       </button>
     </div>
   `;
   document.getElementById('view-catalog').classList.add('hidden');
   document.getElementById('view-product').classList.remove('hidden');
-  
-  // Initialize preview
   updateColorPreview();
   window.scrollTo(0, 0);
+}
+
+function adjustDetailQty(delta) {
+  const input = document.getElementById('selected-qty');
+  let val = parseInt(input.value) || 1;
+  val += delta;
+  if (val < 1) val = 1;
+  input.value = val;
 }
 
 function showCatalog() {
@@ -608,67 +480,84 @@ function addToCart(id, e) {
   if (e) e.stopPropagation();
   const p = products.find(prod => prod.id === id);
   const colorId = document.getElementById('selected-color').value;
+  const qtyInput = document.getElementById('selected-qty');
+  const qty = parseInt(qtyInput.value) || 1;
   const colorObj = availableColors.find(c => c.id === colorId);
   
-  cart.push({
-    ...p,
-    selectedColorEn: colorObj.en,
-    selectedColorHe: colorObj.he,
-    cartId: Date.now() + Math.random()
-  });
+  const existing = cart.find(item => item.id === id && item.selectedColorId === colorId);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({
+      ...p,
+      qty: qty,
+      selectedColorId: colorId,
+      selectedColorEn: colorObj.en,
+      selectedColorHe: colorObj.he,
+      cartId: Date.now() + Math.random()
+    });
+  }
+  
   updateCartUI();
   toggleCart(true);
-}
-
-function generateOrderNumber() {
-    const date = new Date();
-    const dateStr = date.toISOString().slice(2, 10).replace(/-/g, '');
-    const randomStr = Math.random().toString(36).substring(2, 5).toUpperCase();
-    return `MM-${dateStr}-${randomStr}`;
 }
 
 function updateCartUI() {
   const list = document.getElementById('cart-items-list');
   const countDisplay = document.getElementById('cart-count');
   const totalDisplay = document.getElementById('cart-total');
+  const checkoutBtn = document.getElementById('btn-checkout-start');
   const deliverySelect = document.getElementById('delivery-select');
   const fee = parseFloat(deliverySelect.options[deliverySelect.selectedIndex].getAttribute('data-fee')) || 0;
-  
   const isDelivery = deliverySelect.value !== 'pickup';
   document.getElementById('address-container').classList.toggle('hidden', !isDelivery);
   document.getElementById('cust-street').required = isDelivery;
   document.getElementById('cust-apt').required = isDelivery;
 
-  countDisplay.innerText = cart.length;
+  const totalItemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+  countDisplay.innerText = totalItemsCount;
+  checkoutBtn.disabled = cart.length === 0;
 
   if (cart.length === 0) {
-    list.innerHTML = `<div class="text-center py-20 text-slate-400">${ui[currentLang].empty}</div>`;
+    list.innerHTML = `<div class="text-center py-20 text-slate-400 font-medium">${ui[currentLang].empty}</div>`;
     totalDisplay.innerText = "₪0.00";
     return;
   }
 
   let subtotal = 0;
   list.innerHTML = cart.map((p, idx) => {
-    subtotal += p.price;
+    const itemTotal = p.price * p.qty;
+    subtotal += itemTotal;
     const colorName = currentLang === 'en' ? p.selectedColorEn : p.selectedColorHe;
     return `
       <div class="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-        <div class="w-12 h-12 bg-white rounded-md overflow-hidden border border-slate-200">
+        <div class="w-14 h-14 bg-white rounded-lg overflow-hidden border border-slate-200 flex-shrink-0 relative">
           <img src="images/${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/100'">
+          <span class="absolute top-0 left-0 bg-slate-900 text-white text-[9px] px-1.5 py-0.5 rounded-br-lg font-bold">x${p.qty}</span>
         </div>
         <div class="flex-grow">
           <h4 class="font-bold text-sm text-slate-900 leading-tight">${currentLang === 'en' ? p.nameEn : p.nameHe}</h4>
-          <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">${colorName}</p>
-          <p class="text-xs text-green-600 font-bold mt-1">₪${p.price.toFixed(2)}</p>
+          <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-0.5">${colorName}</p>
+          <p class="text-xs text-green-600 font-bold mt-1">₪${itemTotal.toFixed(2)}</p>
         </div>
-        <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500 p-2"><i class="fas fa-trash-alt"></i></button>
+        <div class="flex flex-col gap-1">
+           <button onclick="updateQty(${idx}, 1)" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 rounded text-slate-500 hover:bg-slate-50"><i class="fas fa-plus text-[10px]"></i></button>
+           <button onclick="updateQty(${idx}, -1)" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 rounded text-slate-500 hover:bg-slate-50"><i class="fas fa-minus text-[10px]"></i></button>
+        </div>
+        <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500 w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-50 transition-colors"><i class="fas fa-trash-alt text-sm"></i></button>
       </div>
     `;
   }).join('');
 
   totalDisplay.innerText = `₪${(subtotal + fee).toFixed(2)}`;
   document.getElementById('hidden-total').value = `₪${(subtotal + fee).toFixed(2)}`;
-  document.getElementById('hidden-order-details').value = cart.map(p => `${p.nameEn} (${p.selectedColorEn})`).join(', ');
+  document.getElementById('hidden-order-details').value = cart.map(p => `${p.qty}x ${p.nameEn} (${p.selectedColorEn})`).join(', ');
+}
+
+function updateQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty < 1) cart[idx].qty = 1;
+  updateCartUI();
 }
 
 function removeFromCart(idx) {
@@ -688,13 +577,13 @@ function switchCartScreen(screen) {
   const form = document.getElementById('cart-screen-form');
   const actionsItems = document.getElementById('cart-actions-items');
   const actionsForm = document.getElementById('cart-actions-form');
-
   if (screen === 'form') {
     items.classList.add('hidden');
     actionsItems.classList.add('hidden');
     form.classList.remove('hidden');
     actionsForm.classList.remove('hidden');
-    const orderNum = generateOrderNumber();
+    const date = new Date();
+    const orderNum = `MM-${date.toISOString().slice(2, 10).replace(/-/g, '')}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
     document.getElementById('hidden-order-num').value = orderNum;
     document.getElementById('display-order-num').innerText = orderNum;
   } else {
@@ -711,21 +600,17 @@ async function submitOrder() {
     form.reportValidity();
     return;
   }
-
   const btn = document.getElementById('btn-submit');
   const originalText = btn.innerHTML;
   btn.disabled = true;
   btn.innerHTML = `<span class="spinner"></span>`;
-
   const formData = new FormData(form);
-  
   try {
     const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
       method: "POST",
       body: formData,
       headers: { 'Accept': 'application/json' }
     });
-
     if (response.ok) {
       document.getElementById('cart-screen-form').classList.add('hidden');
       document.getElementById('cart-actions-form').classList.add('hidden');
@@ -734,18 +619,17 @@ async function submitOrder() {
       cart = [];
       updateCartUI();
     } else {
-      throw new Error("Submission failed");
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Submission failed");
     }
   } catch (error) {
-    alert("Oops! Something went wrong. Please try again.");
+    alert("Submission Error: " + error.message + "\n\nNote: If this is your first time using this URL, please check your email for a Formspree activation link.");
     btn.disabled = false;
     btn.innerHTML = originalText;
   }
 }
 
-// Initial language setup
 setLanguage('en');
-
 </script>
 </body>
 </html>
