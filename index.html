@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MM 3D Printing | shop</title>
+  <title>MM 3D Printing</title>
   
   <!-- Favicon / Site Icons from your GitHub /favicon/ folder -->
   <link rel="icon" type="image/png" sizes="32x32" href="https://mmprinting3d.github.io/MM-3D-Printing/favicon/favicon-32x32.png">
@@ -95,7 +95,6 @@
       background: linear-gradient(45deg, #000 33%, #ef4444 33% 66%, #fbbf24 66%);
     }
 
-    /* Fixed UI for Controls */
     .control-pill {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -141,7 +140,7 @@
   <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border border-slate-100">
     <img src="https://mmprinting3d.github.io/MM-3D-Printing/images/logo.png" alt="MM 3D Logo" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/100?text=MM'">
   </div>
-  <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">MM 3D Printing | <span class="text-slate-400">shop</span></h1>
+  <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">MM 3D Printing</h1>
   <p class="text-slate-500 mt-1 text-sm italic" id="slogan">Let's make the impossible possible</p>
 </header>
 
@@ -245,27 +244,74 @@ const availableColors = [
 ];
 
 const products = [
+  // Kitchen Tools
   { id: 1, nameEn: "Scrub daddy stand", nameHe: "מעמד לספוג Scrub Daddy", price: 30.00, cat: "Kitchen", img: "Scrub daddy stand.png" },
   { id: 2, nameEn: "Ultimate Spoon Rest", nameHe: "מחזיק כף מושלם", price: 30.00, cat: "Kitchen", img: "Ultimate Spoon Rest.png" },
   { id: 3, nameEn: "Minimalist Coaster Set", nameHe: "סט תחתיות מינימליסטי", price: 30.00, cat: "Kitchen", img: "Minimalist Coaster Set.png" },
   { id: 4, nameEn: "Lid Storage Rack", nameHe: "מתקן אחסון מכסים", price: 25.00, cat: "Kitchen", img: "Lid Storage Rack.png" },
   { id: 5, nameEn: "Universal Bottle Opener", nameHe: "פותחן בקבוקים אוניברסלי", price: 25.00, cat: "Kitchen", img: "Universal Bottle Opener.png" },
   { id: 6, nameEn: "Bottle Dryer Rack + Holder", nameHe: "מתקן לייבוש בקבוקים + מחזיק", price: 50.00, cat: "Kitchen", img: "Bottle Dryer Rack + Holder.png", packQty: 6 },
+  { id: 7, nameEn: "Cleaning Spray Holder", nameHe: "מחזיק תרסיס ניקוי", price: 25.00, cat: "Kitchen", img: "Cleaning Spray Holder.png" },
+  { id: 8, nameEn: "Food Bag Clips", nameHe: "קליפסים לשקיות מזון", price: 30.00, cat: "Kitchen", img: "Food Bag Clips.png", packQty: 8 },
+  
+  // Pesach
   { id: 9, nameEn: "Chametz-Free sign", nameHe: "שלט חדר זה נקי לפסח", price: 60.00, cat: "Pesach", img: "Chametz-Free sign.jpeg", packQty: 4 },
   { id: 10, nameEn: "Omer calendar", nameHe: "לוח ספירת העומר", price: 65.00, cat: "Pesach", img: "Omer calendar.png" },
+  
+  // Shopping Essentials
+  { id: 11, nameEn: "Bag Handle", nameHe: "ידית נשיאה לשקיות", price: 30.00, cat: "Shopping", img: "Bag Handle.png" },
+  { id: 12, nameEn: "Car Seat Hook", nameHe: "מתלה לרכב", price: 25.00, cat: "Shopping", img: "Car Seat Hook.png" },
+  { id: 13, nameEn: "Shopping Cart Coin + Keychain Case", nameHe: "מחזיק מטבע לעגלת קניות", price: 10.00, cat: "Shopping", img: "Shopping Cart Coin + Keychain Case.png" },
+  
+  // Keyrings
+  { id: 14, nameEn: "Emoji keyring", nameHe: "מחזיק מפתחות אימוג'י", price: 10.00, cat: "Keyrings", img: "Emoji keyring.png" },
+  { id: 15, nameEn: "Gyroscope keyring", nameHe: "מחזיק מפתחות גירוסקופ", price: 20.00, cat: "Keyrings", img: "Gyroscope keyring.png" },
+  { id: 16, nameEn: "cat keyring", nameHe: "מחזיק מפתחות חתול", price: 10.00, cat: "Keyrings", img: "cat keyring.png" },
+  { id: 17, nameEn: "football keyring", nameHe: "מחזיק מפתחות כדורגל", price: 20.00, cat: "Keyrings", img: "football keyring.png" },
+  { id: 18, nameEn: "piano keyring", nameHe: "מחזיק מפתחות פסנתר", price: 15.00, cat: "Keyrings", img: "piano keyring.png" },
+  
+  // Fidget Toys
   { id: 19, nameEn: "Fidget dragon", nameHe: "דרקון פידג'ט", price: 30.00, cat: "Fidget", img: "Fidget dragon.png" },
+  { id: 20, nameEn: "Fidget star", nameHe: "כוכב פידג'ט", price: 15.00, cat: "Fidget", img: "Fidget star.png" },
+  { id: 21, nameEn: "Flexi Rex", nameHe: "דינו פידג'ט", price: 15.00, cat: "Fidget", img: "Flexi Rex.png" },
+  { id: 22, nameEn: "Infinity Fidget Cube", nameHe: "קוביית אינסוף", price: 15.00, cat: "Fidget", img: "Infinity Fidget Cube.png" },
+  
+  // Tefillin
   { id: 23, nameEn: "Beit HaMikdash Tefillin Boxes", nameHe: "בתי תפילין בעיצוב בית המקדש", price: 60.00, cat: "Tefillin", img: "Beit HaMikdash Tefillin Boxes.png" },
-  { id: 24, nameEn: "770 tzedakah box", nameHe: "קופת צדקה 770", price: 77.00, cat: "770", img: "770 tzedakah box.png" },
+  
+  // Tzedakah Boxes
+  { id: 24, nameEn: "770 tzedakah box", nameHe: "קופת צדקה 770", price: 77.00, cat: "Tzedakah", img: "770 tzedakah box.png" },
+  { id: 25, nameEn: "Classic tzedakah box", nameHe: "קופת צדקה קלאסית", price: 30.00, cat: "Tzedakah", img: "Classic tzedakah box.png" },
+  { id: 26, nameEn: "Dual color twist Tzedaka box", nameHe: "קופת צדקה טוויסט דו-צבעוני", price: 35.00, cat: "Tzedakah", img: "Dual color twist Tzedaka box.png" },
+  { id: 27, nameEn: "Round wave tzedakah box", nameHe: "קופת צדקה גלית עגולה", price: 50.00, cat: "Tzedakah", img: "Round wave tzedakah box.png" },
+  { id: 28, nameEn: "Tzedakah Box with Sliding lid", nameHe: "קופת צדקה עם מכסה הזזה", price: 30.00, cat: "Tzedakah", img: "Tzedakah Box with Sliding lid.png" },
+  { id: 29, nameEn: "twist tzedaka box", nameHe: "קופת צדקה טוויסט", price: 40.00, cat: "Tzedakah", img: "twist tzedaka box.png" },
+  
+  // Travel Essentials
+  { id: 30, nameEn: "EU Plug Travel Protection", nameHe: "מגן תקע אירופאי לנסיעות", price: 25.00, cat: "Travel", img: "EU Plug Travel Protection.png" },
+  { id: 31, nameEn: "Earphone case & phone stand", nameHe: "נרתיק לאוזניות ומעמד לטלפון", price: 20.00, cat: "Travel", img: "Earphone case & phone stand.png" },
+  { id: 32, nameEn: "Modular Tie Box with Travel Lid", nameHe: "קופסת עניבות מודולרית", price: 40.00, cat: "Travel", img: "Modular Tie Box with Travel Lid.png" },
+  { id: 33, nameEn: "OralB Toothbrush Head Case", nameHe: "כיסוי לראש מברשת שיניים Oral-B", price: 15.00, cat: "Travel", img: "OralB Toothbrush Head Case.png" },
+  { id: 34, nameEn: "Q-tip - travel box", nameHe: "קופסת מקלוני אוזניים לנסיעה", price: 25.00, cat: "Travel", img: "Q-tip - travel box.png" },
+  { id: 35, nameEn: "Travel cutlery box", nameHe: "קופסת סכו״ם לנסיעות", price: 35.00, cat: "Travel", img: "Travel cutlery box.png" },
+  { id: 36, nameEn: "Universal card case", nameHe: "נרתיק כרטיסים אוניברסלי", price: 30.00, cat: "Travel", img: "Universal card case.png" },
+  { id: 37, nameEn: "Folding Comb", nameHe: "מסרק מתקפל", price: 24.00, cat: "Travel", img: "Folding Comb.png" },
+  { id: 38, nameEn: "Toothbrush Travel Case", nameHe: "נרתיק למברשת שיניים לנסיעה", price: 15.00, cat: "Travel", img: "Toothbrush Travel Case.png" },
+  
+  // Tools
   { id: 39, nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק למשאבת הזנה אינפיניטי", price: 60.00, cat: "Tools", img: "Infinity Feeding pump holder.png" }
 ];
 
 const allCategories = [
-  { id: "Kitchen", en: "Kitchen Tools", he: "פתרונות למטבח" },
-  { id: "Pesach", en: "Pesach", he: "מוצרי פסח" },
+  { id: "Kitchen", en: "Kitchen Tools", he: "פתרונות חכמים למטבח" },
+  { id: "Pesach", en: "Pesach", he: "פסח" },
+  { id: "Shopping", en: "Shopping Essentials", he: "אביזרים לקניות" },
+  { id: "Keyrings", en: "Keyrings", he: "מחזיקי מפתחות" },
   { id: "Fidget", en: "Fidget Toys", he: "צעצועי פידג'ט" },
   { id: "Tefillin", en: "Tefillin Boxes", he: "בתי תפילין" },
-  { id: "770", en: "770 House", he: "בית 770" },
-  { id: "Tools", en: "Accessories", he: "אביזרים" }
+  { id: "Tzedakah", en: "Tzedakah Boxes", he: "קופות צדקה" },
+  { id: "Travel", en: "Travel Essentials", he: "אביזרים לנוסעים" },
+  { id: "Tools", en: "Accessories", he: "כלים ואביזרים" }
 ];
 
 const ui = {
