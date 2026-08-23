@@ -127,7 +127,7 @@
   <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border border-slate-100">
     <img src="https://mmprinting3d.github.io/MM-3D-Printing/images/logo.png" alt="MM 3D Logo" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/100?text=MM'">
   </div>
-  <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">MM 3D Printing</h1>
+  <h1 class="text-3xl font-extrabold tracking-tight text-slate-900" id="site-title">MM 3D Printing</h1>
   <p class="text-slate-500 mt-1 text-sm italic" id="slogan">Let's make the impossible possible</p>
 </header>
 
@@ -135,9 +135,14 @@
   <div id="view-catalog" class="space-y-12"></div>
 
   <div id="view-product" class="hidden max-w-5xl mx-auto">
-    <button onclick="showCatalog()" class="mb-6 flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
-      <i class="fas fa-arrow-left"></i> <span id="btn-back">Back to Catalog</span>
-    </button>
+    <div class="flex justify-between items-center mb-6">
+      <button onclick="showCatalog()" class="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
+        <i class="fas fa-arrow-left" id="icon-back"></i> <span id="btn-back">Back to Catalog</span>
+      </button>
+      <button onclick="shareProduct()" class="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
+        <i class="fas fa-link"></i> <span id="btn-share">Copy Link</span>
+      </button>
+    </div>
     <div id="product-detail-content" class="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden border border-slate-100"></div>
   </div>
 
@@ -148,11 +153,11 @@
     </div>
     <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
       <form id="contact-form" class="space-y-4" action="https://formspree.io/f/mjgprepq" method="POST">
-        <input type="text" name="Name" placeholder="Your Name" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required>
-        <input type="email" name="Email" placeholder="Email Address" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required>
-        <textarea name="Message" rows="3" placeholder="Message" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+        <input type="text" name="Name" id="contact-name" placeholder="Your Name" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required>
+        <input type="email" name="Email" id="contact-email" placeholder="Email Address" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required>
+        <textarea name="Message" id="contact-message" rows="3" placeholder="Message" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500" required></textarea>
         <button type="submit" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-2">
-          <span id="btn-send-msg">Send Message</span> <i class="fas fa-paper-plane text-xs"></i>
+          <span id="btn-send-msg">Send Message</span> <i class="fas fa-paper-plane text-xs rtl:rotate-180"></i>
         </button>
       </form>
     </div>
@@ -171,7 +176,7 @@
       
       <div id="cart-screen-form" class="hidden p-6 space-y-5">
         <button onclick="switchCartScreen('items')" class="text-xs font-bold text-slate-400 flex items-center gap-1 mb-2">
-           <i class="fas fa-chevron-left"></i> Back to Items
+           <i class="fas fa-chevron-left" id="icon-back-cart"></i> <span id="btn-back-items">Back to Items</span>
         </button>
         <form id="order-form" class="space-y-3">
           <input type="hidden" name="_subject" id="order-form-subject" value="New Order from MM 3D Printing">
@@ -179,18 +184,18 @@
           <input type="hidden" name="Order_Number" id="hidden-order-number">
           
           <div class="grid grid-cols-2 gap-3">
-              <input type="text" name="First_Name" placeholder="First Name" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
-              <input type="text" name="Family_Name" placeholder="Family Name" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
+              <input type="text" name="First_Name" id="order-fname" placeholder="First Name" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
+              <input type="text" name="Family_Name" id="order-lname" placeholder="Family Name" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
           </div>
-          <input type="tel" name="Phone" placeholder="Phone Number" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
-          <input type="email" name="Email" placeholder="Email Address" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
+          <input type="tel" name="Phone" id="order-phone" placeholder="Phone Number" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
+          <input type="email" name="Email" id="order-email" placeholder="Email Address" class="w-full p-3 bg-slate-100 rounded-xl text-sm" required>
           
           <div class="space-y-3">
             <select name="Delivery_Choice" id="delivery-select" onchange="handleDeliveryChange()" class="w-full p-3 bg-slate-100 rounded-xl text-sm outline-none font-bold">
-              <option value="pickup" data-fee="0">Pickup (Jerusalem)</option>
-              <option value="harnof" data-fee="15">Har Nof (+₪15)</option>
-              <option value="knaf_nesharim" data-fee="20">Kanfei Nesharim (+₪20)</option>
-              <option value="bayit_vagan" data-fee="30">Bayit V'Gan (+₪30)</option>
+              <option value="pickup" data-fee="0" id="opt-pickup">Pickup (Jerusalem)</option>
+              <option value="harnof" data-fee="15" id="opt-harnof">Har Nof (+₪15)</option>
+              <option value="knaf_nesharim" data-fee="20" id="opt-kanfei">Kanfei Nesharim (+₪20)</option>
+              <option value="bayit_vagan" data-fee="30" id="opt-bayit">Bayit V'Gan (+₪30)</option>
             </select>
             
             <input type="text" name="Address" id="address-field" placeholder="Full Address (Street, House No, Apt)" class="hidden w-full p-3 bg-slate-100 rounded-xl text-sm border-2 border-blue-100 focus:border-blue-400 outline-none transition-all">
@@ -205,26 +210,26 @@
       <div class="mb-4">
         <div class="flex gap-2">
           <input type="text" id="coupon-input" placeholder="Coupon Code" class="flex-grow p-3 bg-slate-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-green-500 uppercase">
-          <button onclick="applyCoupon()" class="px-4 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition">Apply</button>
+          <button onclick="applyCoupon()" id="btn-apply-coupon" class="px-4 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition">Apply</button>
         </div>
         <div id="coupon-message" class="text-xs mt-2 hidden"></div>
       </div>
       
       <div class="space-y-1 mb-4">
           <div class="flex justify-between items-center text-sm text-slate-500" id="subtotal-row">
-            <span>Subtotal:</span>
+            <span id="label-subtotal">Subtotal:</span>
             <span id="cart-subtotal">₪0.00</span>
           </div>
           <div class="flex justify-between items-center text-sm text-green-600 hidden" id="discount-row">
-            <span>Bulk Discount:</span>
+            <span id="label-bulk">Bulk Discount:</span>
             <span id="cart-discount-val">-₪0.00</span>
           </div>
           <div class="flex justify-between items-center text-sm text-purple-600 hidden" id="coupon-row">
-            <span>Coupon Discount:</span>
+            <span id="label-coupon">Coupon Discount:</span>
             <span id="coupon-discount-val">-₪0.00</span>
           </div>
           <div class="flex justify-between items-center pt-2 border-t border-slate-50">
-            <span class="font-bold text-slate-900">Total:</span>
+            <span class="font-bold text-slate-900" id="label-total">Total:</span>
             <span id="cart-total" class="text-xl font-black text-green-600">₪0.00</span>
           </div>
       </div>
@@ -233,7 +238,7 @@
           Continue to Delivery
       </button>
       <button onclick="submitOrder()" id="btn-submit" class="hidden w-full py-4 bg-green-600 text-white rounded-2xl font-bold flex items-center justify-center gap-2">
-          <span>Send Order</span>
+          <span id="btn-send-order">Send Order</span>
       </button>
     </div>
   </div>
@@ -244,6 +249,7 @@ let currentLang = 'en';
 let cart = [];
 let currentOrderNumber = '';
 let appliedCoupon = null;
+let currentProductId = null;
 const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
 
 // ============================================================
@@ -252,7 +258,7 @@ const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
 // ============================================================
 const couponCodes = [
   { code: "CAMP NISSIM", discount: 0.15 },
-    { code: "YOU GOOD", discount: 0.20 },
+  { code: "YOU GOOD", discount: 0.20 },
   //{ code: "WELCOME", discount: 0.15 }
 ];
 
@@ -322,8 +328,102 @@ const allCategories = [
 ];
 
 const ui = {
-  en: { back: "Back to Catalog", addToCart: "Add to Cart", pack: "PACK", color: "SELECT COLOR:", qty: "QTY" },
-  he: { back: "חזרה לקטלוג", addToCart: "הוסף לסל", pack: "מארז", color: "בחר צבע:", qty: "כמות" }
+  en: { 
+    slogan: "Let's make the impossible possible",
+    back: "Back to Catalog", 
+    addToCart: "Add to Cart", 
+    pack: "PACK", 
+    color: "SELECT COLOR:", 
+    qty: "QTY", 
+    share: "Copy Link", 
+    shareAlert: "Link copied to clipboard!",
+    contactTitle: "Contact Us",
+    contactSub: "Have a question or a custom request?",
+    contactName: "Your Name",
+    contactEmail: "Email Address",
+    contactMsg: "Message",
+    sendMsg: "Send Message",
+    cartTitle: "Your Order",
+    backToItems: "Back to Items",
+    fname: "First Name",
+    lname: "Family Name",
+    phone: "Phone Number",
+    email: "Email Address",
+    addr: "Full Address (Street, House No, Apt)",
+    pickup: "Pickup (Jerusalem)",
+    harnof: "Har Nof (+₪15)",
+    kanfei: "Kanfei Nesharim (+₪20)",
+    bayit: "Bayit V'Gan (+₪30)",
+    couponPh: "Coupon Code",
+    btnApply: "Apply",
+    subtotal: "Subtotal:",
+    bulk: "Bulk Discount:",
+    coupon: "Coupon Discount:",
+    total: "Total:",
+    continueDel: "Continue to Delivery",
+    sendOrder: "Send Order",
+    emptyCart: "Your cart is empty",
+    orderRef: "Order Ref",
+    couponReq: "Please enter a coupon code",
+    couponApp: "Coupon applied!",
+    couponInv: "Invalid coupon code",
+    couponNotApp: "Coupon not applicable with bulk discount",
+    addMoreFor: "Add {count} more items for {percent}% OFF!",
+    maxBulk: "Maximum bulk discount applied!",
+    processing: "Processing...",
+    orderConfirmed: "Order Confirmed!",
+    refNum: "Your reference number is:",
+    contactShortly: "We will contact you shortly to arrange payment and collection.",
+    returnStore: "Return to Store"
+  },
+  he: { 
+    slogan: "בואו נעשה את הבלתי אפשרי לאפשרי",
+    back: "חזרה לקטלוג", 
+    addToCart: "הוסף לסל", 
+    pack: "מארז", 
+    color: "בחר צבע:", 
+    qty: "כמות", 
+    share: "העתק קישור", 
+    shareAlert: "הקישור הועתק!",
+    contactTitle: "צור קשר",
+    contactSub: "יש לכם שאלה או בקשה מיוחדת?",
+    contactName: "השם שלך",
+    contactEmail: "כתובת אימייל",
+    contactMsg: "הודעה",
+    sendMsg: "שלח הודעה",
+    cartTitle: "ההזמנה שלך",
+    backToItems: "חזרה לפריטים",
+    fname: "שם פרטי",
+    lname: "שם משפחה",
+    phone: "מספר טלפון",
+    email: "כתובת אימייל",
+    addr: "כתובת מלאה (רחוב, מספר בית, דירה)",
+    pickup: "איסוף עצמי (ירושלים)",
+    harnof: "הר נוף (+₪15)",
+    kanfei: "כנפי נשרים (+₪20)",
+    bayit: "בית וגן (+₪30)",
+    couponPh: "קוד קופון",
+    btnApply: "הפעל",
+    subtotal: "סכום ביניים:",
+    bulk: "הנחת כמות:",
+    coupon: "הנחת קופון:",
+    total: "סך הכל:",
+    continueDel: "המשך למשלוח",
+    sendOrder: "שלח הזמנה",
+    emptyCart: "העגלה שלך ריקה",
+    orderRef: "מספר הזמנה",
+    couponReq: "אנא הזן קוד קופון",
+    couponApp: "הקופון הופעל!",
+    couponInv: "קוד קופון לא חוקי",
+    couponNotApp: "לא ניתן לשלב קופון עם הנחת כמות",
+    addMoreFor: "הוסף עוד {count} פריטים לקבלת {percent}% הנחה!",
+    maxBulk: "הנחת כמות מרבית הופעלה!",
+    processing: "מעבד...",
+    orderConfirmed: "ההזמנה אושרה!",
+    refNum: "מספר ההזמנה שלך הוא:",
+    contactShortly: "ניצור איתך קשר בהקדם להסדרת תשלום ואיסוף.",
+    returnStore: "חזרה לחנות"
+  }
 };
 
 function generateOrderNumber() {
@@ -348,7 +448,59 @@ function handleDeliveryChange() {
 function setLanguage(lang) {
   currentLang = lang;
   document.body.className = lang === 'he' ? 'rtl' : '';
+  
+  // Update static texts
+  document.getElementById('slogan').innerText = ui[lang].slogan;
+  document.getElementById('btn-back').innerText = ui[lang].back;
+  document.getElementById('btn-share').innerText = ui[lang].share;
+  
+  document.getElementById('contact-title').innerText = ui[lang].contactTitle;
+  document.getElementById('contact-subtitle').innerText = ui[lang].contactSub;
+  document.getElementById('contact-name').placeholder = ui[lang].contactName;
+  document.getElementById('contact-email').placeholder = ui[lang].contactEmail;
+  document.getElementById('contact-message').placeholder = ui[lang].contactMsg;
+  document.getElementById('btn-send-msg').innerText = ui[lang].sendMsg;
+  
+  document.getElementById('cart-title').innerText = ui[lang].cartTitle;
+  document.getElementById('btn-back-items').innerText = ui[lang].backToItems;
+  document.getElementById('order-fname').placeholder = ui[lang].fname;
+  document.getElementById('order-lname').placeholder = ui[lang].lname;
+  document.getElementById('order-phone').placeholder = ui[lang].phone;
+  document.getElementById('order-email').placeholder = ui[lang].email;
+  document.getElementById('address-field').placeholder = ui[lang].addr;
+  
+  document.getElementById('opt-pickup').innerText = ui[lang].pickup;
+  document.getElementById('opt-harnof').innerText = ui[lang].harnof;
+  document.getElementById('opt-kanfei').innerText = ui[lang].kanfei;
+  document.getElementById('opt-bayit').innerText = ui[lang].bayit;
+  
+  document.getElementById('coupon-input').placeholder = ui[lang].couponPh;
+  document.getElementById('btn-apply-coupon').innerText = ui[lang].btnApply;
+  
+  document.getElementById('label-subtotal').innerText = ui[lang].subtotal;
+  document.getElementById('label-bulk').innerText = ui[lang].bulk;
+  document.getElementById('label-coupon').innerText = ui[lang].coupon;
+  document.getElementById('label-total').innerText = ui[lang].total;
+  
+  document.getElementById('btn-checkout-start').innerText = ui[lang].continueDel;
+  document.getElementById('btn-send-order').innerText = ui[lang].sendOrder;
+
+  // Handle icons for RTL
+  if (lang === 'he') {
+    document.getElementById('icon-back').className = "fas fa-arrow-right";
+    document.getElementById('icon-back-cart').className = "fas fa-chevron-right";
+  } else {
+    document.getElementById('icon-back').className = "fas fa-arrow-left";
+    document.getElementById('icon-back-cart').className = "fas fa-chevron-left";
+  }
+
   renderCatalog();
+  updateCartUI(); // Re-render cart to update dynamic texts
+  
+  const viewProduct = document.getElementById('view-product');
+  if (viewProduct && !viewProduct.classList.contains('hidden') && currentProductId) {
+    showProduct(currentProductId, false); 
+  }
 }
 
 function renderCatalog() {
@@ -384,15 +536,24 @@ function renderCatalog() {
   });
 }
 
-function showProduct(id) {
+function showProduct(id, updateUrl = true) {
+  currentProductId = id;
   const p = products.find(prod => prod.id === id);
+  if (!p) return;
+
+  if (updateUrl) {
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set('product', id);
+    window.history.pushState({ productId: id }, '', newUrl);
+  }
+
   const detail = document.getElementById('product-detail-content');
   const colorsHtml = availableColors.map(c => `<option value="${c.id}">${currentLang === 'en' ? c.en : c.he}</option>`).join('');
   const badgeHtml = p.packQty ? `<div class="pack-tag text-xs px-4 py-2">${p.packQty}-${ui[currentLang].pack}</div>` : '';
 
   detail.innerHTML = `
     <div class="grid lg:grid-cols-2 items-stretch min-h-[500px]">
-      <div class="square-aspect lg:h-full lg:rounded-r-none m-4 md:m-8 lg:m-12">
+      <div class="square-aspect lg:h-full lg:rounded-r-none m-4 md:m-8 lg:m-12 ${currentLang === 'he' ? 'lg:rounded-l-none lg:rounded-r-3xl' : ''}">
         ${badgeHtml}
         <img src="${BASE_IMG_URL}${encodeURIComponent(p.img)}" class="rounded-3xl" alt="${p.nameEn}" onerror="this.src='https://via.placeholder.com/600'">
       </div>
@@ -405,7 +566,7 @@ function showProduct(id) {
             <label class="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-wider">${ui[currentLang].color}</label>
             <div class="control-pill shadow-sm gap-3">
                <div id="color-preview" class="w-6 h-6 rounded-full border border-slate-200"></div>
-               <select id="selected-color" onchange="updateDetailColor()" class="bg-transparent font-bold text-sm outline-none border-none w-full cursor-pointer">
+               <select id="selected-color" onchange="updateDetailColor()" class="bg-transparent font-bold text-sm outline-none border-none w-full cursor-pointer appearance-none ${currentLang === 'he' ? 'pr-2' : ''}">
                  ${colorsHtml}
                </select>
             </div>
@@ -431,6 +592,16 @@ function showProduct(id) {
   window.scrollTo(0,0);
 }
 
+function shareProduct() {
+  if (!currentProductId) return;
+  const url = window.location.origin + window.location.pathname + '?product=' + currentProductId;
+  navigator.clipboard.writeText(url).then(() => {
+    alert(ui[currentLang].shareAlert);
+  }).catch(err => {
+    prompt(ui[currentLang].shareAlert, url);
+  });
+}
+
 function updateDetailColor() {
   const sel = document.getElementById('selected-color');
   const prev = document.getElementById('color-preview');
@@ -446,7 +617,13 @@ function adjQty(amt) {
   input.value = val;
 }
 
-function showCatalog() {
+function showCatalog(updateUrl = true) {
+  currentProductId = null;
+  if (updateUrl) {
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.delete('product');
+    window.history.pushState({}, '', newUrl);
+  }
   document.getElementById('view-catalog').classList.remove('hidden');
   document.getElementById('view-product').classList.add('hidden');
 }
@@ -494,11 +671,14 @@ function calculateDiscount(totalQty) {
 }
 
 function getNextTierMessage(totalQty) {
-  if (totalQty < 20) return `Add ${20 - totalQty} more items for 10% OFF!`;
-  if (totalQty < 30) return `Add ${30 - totalQty} more items for 15% OFF!`;
-  if (totalQty < 50) return `Add ${50 - totalQty} more items for 20% OFF!`;
-  if (totalQty < 100) return `Add ${100 - totalQty} more items for 25% OFF!`;
-  return "Maximum bulk discount applied!";
+  let count, percent;
+  if (totalQty < 20) { count = 20 - totalQty; percent = 10; }
+  else if (totalQty < 30) { count = 30 - totalQty; percent = 15; }
+  else if (totalQty < 50) { count = 50 - totalQty; percent = 20; }
+  else if (totalQty < 100) { count = 100 - totalQty; percent = 25; }
+  else { return ui[currentLang].maxBulk; }
+  
+  return ui[currentLang].addMoreFor.replace('{count}', count).replace('{percent}', percent);
 }
 
 function updateCartUI() {
@@ -517,7 +697,7 @@ function updateCartUI() {
   count.innerText = totalItemsQty;
   
   if(!list.classList.contains('hidden')) {
-    list.innerHTML = cart.length ? '' : '<p class="text-center text-slate-400 py-10">Your cart is empty</p>';
+    list.innerHTML = cart.length ? '' : `<p class="text-center text-slate-400 py-10">${ui[currentLang].emptyCart}</p>`;
   }
   
   let subtotal = 0;
@@ -535,7 +715,7 @@ function updateCartUI() {
         <img src="${BASE_IMG_URL}${encodeURIComponent(item.img)}" class="w-16 h-16 rounded-xl object-cover">
         <div class="flex-grow">
           <h4 class="font-bold text-sm">${currentLang === 'en' ? item.nameEn : item.nameHe}</h4>
-          <div class="text-[10px] text-slate-400 flex items-center gap-1">
+          <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
             <div class="w-2 h-2 rounded-full" style="background:${item.color.hex}"></div>
             ${currentLang === 'en' ? item.color.en : item.color.he}
           </div>
@@ -545,10 +725,10 @@ function updateCartUI() {
                <input type="number" value="${item.qty}" readonly class="w-6 text-center bg-transparent font-black text-sm">
                <button onclick="updateCartQty(${item.cartId}, 1)" class="qty-btn"><i class="fas fa-plus text-[10px]"></i></button>
             </div>
-            <div class="font-black text-sm">₪${rowPrice.toFixed(2)}</div>
+            <div class="font-black text-sm text-green-600">₪${rowPrice.toFixed(2)}</div>
           </div>
         </div>
-        <button onclick="removeFromCart(${item.cartId})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash-alt"></i></button>
+        <button onclick="removeFromCart(${item.cartId})" class="text-slate-300 hover:text-red-500 self-start p-2"><i class="fas fa-trash-alt"></i></button>
       `;
       list.appendChild(div);
     }
@@ -592,7 +772,7 @@ function updateCartUI() {
     // Clear coupon message if bulk discount is applied
     const couponMessage = document.getElementById('coupon-message');
     if (couponMessage && appliedCoupon) {
-      couponMessage.textContent = 'Coupon not applicable with bulk discount';
+      couponMessage.textContent = ui[currentLang].couponNotApp;
       couponMessage.className = 'text-xs mt-2 text-orange-500';
       couponMessage.classList.remove('hidden');
     }
@@ -610,22 +790,31 @@ function updateCartUI() {
   if(cart.length > 0 && !document.getElementById('cart-screen-form').classList.contains('hidden')) {
       bulkArea.innerHTML = `
         <div class="p-3 bg-slate-100 border border-slate-200 rounded-xl text-center">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Order Ref</span>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">${ui[currentLang].orderRef}</span>
           <span class="text-lg font-black text-slate-900">#${currentOrderNumber}</span>
         </div>
       `;
   } else if(cart.length > 0) {
     bulkArea.innerHTML = `
       <div class="p-3 bg-blue-50 border border-blue-100 rounded-xl text-[11px] text-blue-700 font-medium">
-        <i class="fas fa-info-circle mr-1"></i> ${getNextTierMessage(totalItemsQty)}
+        <i class="fas fa-info-circle ${currentLang === 'he' ? 'ml-1' : 'mr-1'}"></i> ${getNextTierMessage(totalItemsQty)}
       </div>
     `;
+  } else {
+    bulkArea.innerHTML = '';
   }
 
   summaryText += `\n------------------\n`;
   summaryText += `Items Subtotal: ₪${subtotal.toFixed(2)}\n`;
-  if(discountType === 'bulk') summaryText += `Bulk Discount (${discountPercent*100}%): -₪${finalDiscountAmount.toFixed(2)}\n`;
-  if(discountType === 'coupon') summaryText += `Coupon Discount (${discountPercent*100}%): -₪${finalDiscountAmount.toFixed(2)}\n`;
+  
+  if (appliedCoupon) {
+      summaryText += `Coupon Used: ${appliedCoupon.code}\n`;
+  } else {
+      summaryText += `Coupon Used: None\n`;
+  }
+  
+  if(discountType === 'bulk') summaryText += `Bulk Discount (${(discountPercent*100).toFixed(0)}%): -₪${finalDiscountAmount.toFixed(2)}\n`;
+  if(discountType === 'coupon') summaryText += `Coupon Discount (${(discountPercent*100).toFixed(0)}%): -₪${finalDiscountAmount.toFixed(2)}\n`;
   summaryText += `Delivery Choice: ${deliverySelect?.selectedOptions[0].text || 'Pickup'}\n`;
   
   const addrValue = document.getElementById('address-field').value;
@@ -656,7 +845,7 @@ function applyCoupon() {
   const code = input.value.trim().toUpperCase();
   
   if (!code) {
-    message.textContent = 'Please enter a coupon code';
+    message.textContent = ui[currentLang].couponReq;
     message.className = 'text-xs mt-2 text-red-500';
     message.classList.remove('hidden');
     return;
@@ -666,13 +855,13 @@ function applyCoupon() {
   
   if (coupon) {
     appliedCoupon = coupon;
-    message.textContent = `Coupon applied! ${coupon.discount * 100}% discount`;
+    message.textContent = `${ui[currentLang].couponApp} ${coupon.discount * 100}% discount`;
     message.className = 'text-xs mt-2 text-green-600 font-bold';
     message.classList.remove('hidden');
     input.value = '';
     updateCartUI();
   } else {
-    message.textContent = 'Invalid coupon code';
+    message.textContent = ui[currentLang].couponInv;
     message.className = 'text-xs mt-2 text-red-500';
     message.classList.remove('hidden');
   }
@@ -691,7 +880,7 @@ async function submitOrder() {
 
   const originalText = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${ui[currentLang].processing}`;
 
   try {
     const formData = new FormData(form);
@@ -703,20 +892,20 @@ async function submitOrder() {
 
     if (response.ok) {
       const modal = document.createElement('div');
-      modal.className = "fixed inset-0 flex items-center justify-center bg-black/50 z-[200]";
+      modal.className = `fixed inset-0 flex items-center justify-center bg-black/50 z-[200] ${currentLang === 'he' ? 'rtl' : ''}`;
       modal.innerHTML = `
         <div class="bg-white p-8 rounded-[2.5rem] text-center max-w-sm shadow-2xl mx-4">
           <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <i class="fas fa-check text-3xl"></i>
           </div>
-          <h3 class="text-2xl font-black mb-2">Order Confirmed!</h3>
-          <p class="text-slate-400 text-sm mb-4">Your reference number is:</p>
+          <h3 class="text-2xl font-black mb-2">${ui[currentLang].orderConfirmed}</h3>
+          <p class="text-slate-400 text-sm mb-4">${ui[currentLang].refNum}</p>
           <div class="bg-slate-50 py-3 rounded-2xl mb-6 border border-slate-100">
             <span class="text-2xl font-black text-slate-900 tracking-tight">#${currentOrderNumber}</span>
           </div>
-          <p class="text-slate-500 text-sm mb-8 leading-relaxed">We will contact you shortly to arrange payment and collection.</p>
+          <p class="text-slate-500 text-sm mb-8 leading-relaxed">${ui[currentLang].contactShortly}</p>
           <button onclick="location.reload()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold">
-            Return to Store
+            ${ui[currentLang].returnStore}
           </button>
         </div>
       `;
@@ -731,7 +920,36 @@ async function submitOrder() {
   }
 }
 
-setLanguage('en');
+// Handle Browser Back/Forward navigation for product deep links
+window.addEventListener('popstate', () => {
+  const params = new URLSearchParams(window.location.search);
+  const pId = params.get('product');
+  if (pId) {
+    const id = parseInt(pId);
+    if (products.find(p => p.id === id)) {
+      showProduct(id, false);
+    } else {
+      showCatalog(false);
+    }
+  } else {
+    showCatalog(false);
+  }
+});
+
+// App Initialization
+function initApp() {
+  setLanguage('en');
+  const params = new URLSearchParams(window.location.search);
+  const pId = params.get('product');
+  if (pId) {
+    const id = parseInt(pId);
+    if (products.find(p => p.id === id)) {
+      showProduct(id, false);
+    }
+  }
+}
+
+initApp();
 </script>
 </body>
 </html>
