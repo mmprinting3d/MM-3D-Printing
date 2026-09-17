@@ -252,6 +252,53 @@ let appliedCoupon = null;
 let currentProductId = null;
 const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
 
+// Calculate repository base path for clean product URLs
+const BASE_PATH = (function() {
+  let path = window.location.pathname;
+  if (path.endsWith('index.html')) {
+    path = path.substring(0, path.length - 'index.html'.length);
+  }
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length > 0) {
+    const lastSegment = decodeURIComponent(segments[segments.length - 1]);
+    const isProduct = products.some(p => 
+      p.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
+      p.id.toString() === lastSegment
+    );
+    if (isProduct) {
+      segments.pop();
+      return '/' + (segments.length ? segments.join('/') + '/' : '');
+    }
+  }
+  return path.endsWith('/') ? path : path + '/';
+})();
+
+function getProductFromUrl() {
+  // Check query parameter fallback (?product=3 or ?product=Name)
+  const params = new URLSearchParams(window.location.search);
+  const pIdParam = params.get('product');
+  if (pIdParam) {
+    const p = products.find(prod => prod.id === parseInt(pIdParam) || prod.nameEn.toLowerCase() === pIdParam.toLowerCase());
+    if (p) return p;
+  }
+
+  // Check URL path segment (/Minimalist Coaster Set)
+  let currentPath = decodeURIComponent(window.location.pathname);
+  if (currentPath.endsWith('/')) currentPath = currentPath.slice(0, -1);
+  const segments = currentPath.split('/');
+  const lastSegment = segments[segments.length - 1];
+
+  if (lastSegment) {
+    const p = products.find(prod => 
+      prod.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
+      prod.id.toString() === lastSegment
+    );
+    if (p) return p;
+  }
+
+  return null;
+}
+
 // ============================================================
 // COUPON CODES - Add new coupon codes here
 // Format: { code: "CODE", discount: 0.10 } (discount as decimal, e.g., 0.10 = 10%)
@@ -297,22 +344,77 @@ const products = [
   { id: 503, nameEn: "Flexi Rex", nameHe: "דינו פידג'ט", priceDisplay: "15.00", priceValue: 15.0, cat: "Fidget Toys", img: "images/Flexi Rex.png" },
   { id: 504, nameEn: "Infinity Fidget Cube", nameHe: "קוביית אינסוף", priceDisplay: "15.00", priceValue: 15.0, cat: "Fidget Toys", img: "images/Infinity Fidget Cube.png" },
   { id: 601, nameEn: "Beit HaMikdash Tefillin Boxes", nameHe: "בתי תפילין בעיצוב בית המקדש", priceDisplay: "60.00", priceValue: 60.0, cat: "Tefillin Boxes", img: "images/Beit HaMikdash Tefillin Boxes.png" },
+  { id: 602, nameEn: "Beit HaMikdash Tefillin Boxes (Chabad Size)", nameHe: "בתי תפילין בעיצוב בית המקדש (גודל חב\"ד)", priceDisplay: "70.00", priceValue: 70.0, cat: "Tefillin Boxes", img: "images/Beit HaMikdash Tefillin Boxes.png" },
   { id: 701, nameEn: "770 tzedakah box", nameHe: "קופת צדקה 770", priceDisplay: "77.00", priceValue: 77.0, cat: "Tzedakah Boxes", img: "images/770 tzedakah box.png" },
   { id: 702, nameEn: "Classic tzedakah box", nameHe: "קופת צדקה קלאסית", priceDisplay: "30.00", priceValue: 30.0, cat: "Tzedakah Boxes", img: "images/Classic tzedakah box.png" },
-  { id: 703, nameEn: "Dual color twist Tzedaka box", nameHe: "קופת צדקה טוויסט דו-צבעוני", priceDisplay: "35.00", priceValue: 35.0, cat: "Tzedakah Boxes", img: "images/Dual color twist Tzedaka box.png" },
-  { id: 704, nameEn: "Round wave tzedakah box", nameHe: "קופת צדקה גלית עגולה", priceDisplay: "50.00", priceValue: 50.0, cat: "Tzedakah Boxes", img: "images/Round wave tzedakah box.png" },
-  { id: 705, nameEn: "Tzedakah Box with Sliding lid", nameHe: "קופת צדקה עם מכסה הזזה", priceDisplay: "30.00", priceValue: 30.0, cat: "Tzedakah Boxes", img: "images/Tzedakah Box with Sliding lid.png" },
-  { id: 706, nameEn: "twist tzedaka box", nameHe: "קופת צדקה טוויסט", priceDisplay: "40.00", priceValue: 40.0, cat: "Tzedakah Boxes", img: "images/twist tzedaka box.png" },
-  { id: 100, nameEn: "EU Plug Travel Protection", nameHe: "מגן תקע אירופאי לנסיעות", priceDisplay: "25.00", priceValue: 25.0, cat: "Travel Essentials", img: "images/EU Plug Travel Protection.png" },
-  { id: 101, nameEn: "Earphone case & phone stand", nameHe: "נרתיק לאוזניות ומעמד לטלפון", priceDisplay: "20.00", priceValue: 20.0, cat: "Travel Essentials", img: "images/Earphone case & phone stand.png" },
-  { id: 102, nameEn: "Modular Tie Box with Travel Lid", nameHe: "קופסת עניבות מודולרית", priceDisplay: "40.00", priceValue: 40.0, cat: "Travel Essentials", img: "images/Modular Tie Box with Travel Lid.png" },
-  { id: 103, nameEn: "OralB Toothbrush Head Case", nameHe: "כיסוי לראש מברשת שיניים Oral-B", priceDisplay: "15.00", priceValue: 15.0, cat: "Travel Essentials", img: "images/OralB Toothbrush Head Case.png" },
-  { id: 104, nameEn: "Q-tip - travel box", nameHe: "קופסת מקלוני אוזניים לנסיעה", priceDisplay: "25.00", priceValue: 25.0, cat: "Travel Essentials", img: "images/Q-tip - travel box.png" },
-  { id: 105, nameEn: "Travel cutlery box", nameHe: "קופסת סכו״ם לנסיעות", priceDisplay: "35.00", priceValue: 35.0, cat: "Travel Essentials", img: "images/Travel cutlery box.png" },
-  { id: 106, nameEn: "Universal card case", nameHe: "נרתיק כרטיסים אוניברסלי", priceDisplay: "30.00", priceValue: 30.0, cat: "Travel Essentials", img: "images/Universal card case.png" },
-  { id: 107, nameEn: "Folding Comb", nameHe: "מסרק מתקפל", priceDisplay: "24.00", priceValue: 24.0, cat: "Travel Essentials", img: "images/Folding Comb.png" },
-  { id: 108, nameEn: "Toothbrush Travel Case", nameHe: "נרתיק למברשת שיניים לנסיעה", priceDisplay: "15.00", priceValue: 15.0, cat: "Travel Essentials", img: "images/Toothbrush Travel Case.png" },
-  { id: 801, nameEn: "Infinity Feeding pump holder", nameHe: "מחזיק למשאבת הזנה אינפיניטי", priceDisplay: "60.00", priceValue: 60.0, cat: "Tools and Accessories", img: "images/Infinity Feeding pump holder.png" }
+<script>
+let currentLang = 'en';
+let cart = [];
+let currentOrderNumber = '';
+let appliedCoupon = null;
+let currentProductId = null;
+const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
+
+// Calculate repository base path for clean product URLs
+const BASE_PATH = (function() {
+  let path = window.location.pathname;
+  if (path.endsWith('index.html')) {
+    path = path.substring(0, path.length - 'index.html'.length);
+  }
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length > 0) {
+    const lastSegment = decodeURIComponent(segments[segments.length - 1]);
+    const isProduct = products.some(p => 
+      p.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
+      p.nameHe.toLowerCase() === lastSegment.toLowerCase() ||
+      p.id.toString() === lastSegment
+    );
+    if (isProduct) {
+      segments.pop();
+      return '/' + (segments.length ? segments.join('/') + '/' : '');
+    }
+  }
+  return path.endsWith('/') ? path : path + '/';
+})();
+
+function getProductFromUrl() {
+  const matchProduct = (str) => {
+    if (!str) return null;
+    const decoded = decodeURIComponent(str).trim().toLowerCase();
+    return products.find(p => 
+      p.nameEn.toLowerCase() === decoded ||
+      p.nameHe.toLowerCase() === decoded ||
+      p.id.toString() === decoded
+    );
+  };
+
+  // 1. Check query parameter fallback (?product=Full Name or ?product=3)
+  const params = new URLSearchParams(window.location.search);
+  const pParam = params.get('product') || params.get('p');
+  if (pParam) {
+    const found = matchProduct(pParam);
+    if (found) return found;
+  }
+
+  // 2. Check URL hash (#Full Name)
+  if (window.location.hash) {
+    const found = matchProduct(window.location.hash.replace(/^#/, ''));
+    if (found) return found;
+  }
+
+  // 3. Check URL path segment (/Full Name)
+  let currentPath = decodeURIComponent(window.location.pathname);
+  if (currentPath.endsWith('/')) currentPath = currentPath.slice(0, -1);
+  const segments = currentPath.split('/');
+  const lastSegment = segments[segments.length - 1];
+
+  if (lastSegment) {
+    const found = matchProduct(lastSegment);
+    if (found) return found;
+  }
+
+  return null;
+}
 ];
 
 const allCategories = [
@@ -541,9 +643,10 @@ function showProduct(id, updateUrl = true) {
   const p = products.find(prod => prod.id === id);
   if (!p) return;
 
+  const fullName = currentLang === 'he' ? p.nameHe : p.nameEn;
+
   if (updateUrl) {
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.set('product', id);
+    const newUrl = window.location.origin + BASE_PATH + encodeURI(fullName);
     window.history.pushState({ productId: id }, '', newUrl);
   }
 
@@ -594,7 +697,10 @@ function showProduct(id, updateUrl = true) {
 
 function shareProduct() {
   if (!currentProductId) return;
-  const url = window.location.origin + window.location.pathname + '?product=' + currentProductId;
+  const p = products.find(prod => prod.id === currentProductId);
+  if (!p) return;
+  const fullName = currentLang === 'he' ? p.nameHe : p.nameEn;
+  const url = window.location.origin + BASE_PATH + encodeURI(fullName);
   navigator.clipboard.writeText(url).then(() => {
     alert(ui[currentLang].shareAlert);
   }).catch(err => {
@@ -620,9 +726,7 @@ function adjQty(amt) {
 function showCatalog(updateUrl = true) {
   currentProductId = null;
   if (updateUrl) {
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.delete('product');
-    window.history.pushState({}, '', newUrl);
+    window.history.pushState({}, '', window.location.origin + BASE_PATH);
   }
   document.getElementById('view-catalog').classList.remove('hidden');
   document.getElementById('view-product').classList.add('hidden');
@@ -922,30 +1026,19 @@ async function submitOrder() {
 
 // Handle Browser Back/Forward navigation for product deep links
 window.addEventListener('popstate', () => {
-  const params = new URLSearchParams(window.location.search);
-  const pId = params.get('product');
-  if (pId) {
-    const id = parseInt(pId);
-    if (products.find(p => p.id === id)) {
-      showProduct(id, false);
-    } else {
-      showCatalog(false);
-    }
+  const p = getProductFromUrl();
+  if (p) {
+    showProduct(p.id, false);
   } else {
     showCatalog(false);
   }
 });
 
-// App Initialization
 function initApp() {
   setLanguage('en');
-  const params = new URLSearchParams(window.location.search);
-  const pId = params.get('product');
-  if (pId) {
-    const id = parseInt(pId);
-    if (products.find(p => p.id === id)) {
-      showProduct(id, false);
-    }
+  const p = getProductFromUrl();
+  if (p) {
+    showProduct(p.id, false);
   }
 }
 
