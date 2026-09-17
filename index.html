@@ -314,27 +314,13 @@ const allCategories = [
   { id: "Tools and Accessories", en: "Tools and Accessories", he: "כלים ואביזרים" }
 ];
 
-// Calculate repository base path for clean product URLs
-const BASE_PATH = (function() {
-  let path = window.location.pathname;
-  if (path.endsWith('index.html')) {
-    path = path.substring(0, path.length - 'index.html'.length);
-  }
-  const segments = path.split('/').filter(Boolean);
-  if (segments.length > 0) {
-    const lastSegment = decodeURIComponent(segments[segments.length - 1]);
-    const isProduct = products.some(p => 
-      p.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
-      p.nameHe.toLowerCase() === lastSegment.toLowerCase() ||
-      p.id.toString() === lastSegment
-    );
-    if (isProduct) {
-      segments.pop();
-      return '/' + (segments.length ? segments.join('/') + '/' : '');
+function getBaseUrl() {
+    let path = window.location.pathname;
+    if (path.endsWith('index.html')) {
+        path = path.substring(0, path.length - 'index.html'.length);
     }
-  }
-  return path.endsWith('/') ? path : path + '/';
-})();
+    return window.location.origin + path;
+}
 
 function getProductFromUrl() {
   const matchProduct = (str) => {
@@ -347,7 +333,6 @@ function getProductFromUrl() {
     );
   };
 
-  // 1. Check query parameter fallback (?product=Full Name or ?product=3)
   const params = new URLSearchParams(window.location.search);
   const pParam = params.get('product') || params.get('p');
   if (pParam) {
@@ -355,20 +340,8 @@ function getProductFromUrl() {
     if (found) return found;
   }
 
-  // 2. Check URL hash (#Full Name)
   if (window.location.hash) {
     const found = matchProduct(window.location.hash.replace(/^#/, ''));
-    if (found) return found;
-  }
-
-  // 3. Check URL path segment (/Full Name)
-  let currentPath = decodeURIComponent(window.location.pathname);
-  if (currentPath.endsWith('/')) currentPath = currentPath.slice(0, -1);
-  const segments = currentPath.split('/');
-  const lastSegment = segments[segments.length - 1];
-
-  if (lastSegment) {
-    const found = matchProduct(lastSegment);
     if (found) return found;
   }
 
@@ -592,7 +565,7 @@ function showProduct(id, updateUrl = true) {
   const fullName = currentLang === 'he' ? p.nameHe : p.nameEn;
 
   if (updateUrl) {
-    const newUrl = window.location.origin + BASE_PATH + encodeURI(fullName);
+    const newUrl = getBaseUrl() + '?p=' + encodeURIComponent(fullName);
     window.history.pushState({ productId: id }, '', newUrl);
   }
 
@@ -632,9 +605,9 @@ function showProduct(id, updateUrl = true) {
         <button onclick="addToCart(${p.id})" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3">
           <i class="fas fa-shopping-basket"></i> ${ui[currentLang].addToCart}
         </button>
-      </div>
     </div>
-  `;
+  </div>
+`;
   document.getElementById('view-catalog').classList.add('hidden');
   document.getElementById('view-product').classList.remove('hidden');
   updateDetailColor();
@@ -646,7 +619,7 @@ function shareProduct() {
   const p = products.find(prod => prod.id === currentProductId);
   if (!p) return;
   const fullName = currentLang === 'he' ? p.nameHe : p.nameEn;
-  const url = window.location.origin + BASE_PATH + encodeURI(fullName);
+  const url = getBaseUrl() + '?p=' + encodeURIComponent(fullName);
   navigator.clipboard.writeText(url).then(() => {
     alert(ui[currentLang].shareAlert);
   }).catch(err => {
@@ -672,7 +645,7 @@ function adjQty(amt) {
 function showCatalog(updateUrl = true) {
   currentProductId = null;
   if (updateUrl) {
-    window.history.pushState({}, '', window.location.origin + BASE_PATH);
+    window.history.pushState({}, '', getBaseUrl());
   }
   document.getElementById('view-catalog').classList.remove('hidden');
   document.getElementById('view-product').classList.add('hidden');
