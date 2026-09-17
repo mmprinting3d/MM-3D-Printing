@@ -252,56 +252,9 @@ let appliedCoupon = null;
 let currentProductId = null;
 const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
 
-// Calculate repository base path for clean product URLs
-const BASE_PATH = (function() {
-  let path = window.location.pathname;
-  if (path.endsWith('index.html')) {
-    path = path.substring(0, path.length - 'index.html'.length);
-  }
-  const segments = path.split('/').filter(Boolean);
-  if (segments.length > 0) {
-    const lastSegment = decodeURIComponent(segments[segments.length - 1]);
-    const isProduct = products.some(p => 
-      p.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
-      p.id.toString() === lastSegment
-    );
-    if (isProduct) {
-      segments.pop();
-      return '/' + (segments.length ? segments.join('/') + '/' : '');
-    }
-  }
-  return path.endsWith('/') ? path : path + '/';
-})();
-
-function getProductFromUrl() {
-  // Check query parameter fallback (?product=3 or ?product=Name)
-  const params = new URLSearchParams(window.location.search);
-  const pIdParam = params.get('product');
-  if (pIdParam) {
-    const p = products.find(prod => prod.id === parseInt(pIdParam) || prod.nameEn.toLowerCase() === pIdParam.toLowerCase());
-    if (p) return p;
-  }
-
-  // Check URL path segment (/Minimalist Coaster Set)
-  let currentPath = decodeURIComponent(window.location.pathname);
-  if (currentPath.endsWith('/')) currentPath = currentPath.slice(0, -1);
-  const segments = currentPath.split('/');
-  const lastSegment = segments[segments.length - 1];
-
-  if (lastSegment) {
-    const p = products.find(prod => 
-      prod.nameEn.toLowerCase() === lastSegment.toLowerCase() ||
-      prod.id.toString() === lastSegment
-    );
-    if (p) return p;
-  }
-
-  return null;
-}
-
 // ============================================================
-// COUPON CODES - Add new coupon codes here
-// Format: { code: "CODE", discount: 0.10 } (discount as decimal, e.g., 0.10 = 10%)
+// DATA SETS: Hoisted to the top so BASE_PATH and other functions
+// can access them immediately without causing ReferenceErrors.
 // ============================================================
 const couponCodes = [
   { code: "CAMP NISSIM", discount: 0.15 },
@@ -346,14 +299,20 @@ const products = [
   { id: 601, nameEn: "Beit HaMikdash Tefillin Boxes", nameHe: "בתי תפילין בעיצוב בית המקדש", priceDisplay: "60.00", priceValue: 60.0, cat: "Tefillin Boxes", img: "images/Beit HaMikdash Tefillin Boxes.png" },
   { id: 602, nameEn: "Beit HaMikdash Tefillin Boxes (Chabad Size)", nameHe: "בתי תפילין בעיצוב בית המקדש (גודל חב\"ד)", priceDisplay: "70.00", priceValue: 70.0, cat: "Tefillin Boxes", img: "images/Beit HaMikdash Tefillin Boxes.png" },
   { id: 701, nameEn: "770 tzedakah box", nameHe: "קופת צדקה 770", priceDisplay: "77.00", priceValue: 77.0, cat: "Tzedakah Boxes", img: "images/770 tzedakah box.png" },
-  { id: 702, nameEn: "Classic tzedakah box", nameHe: "קופת צדקה קלאסית", priceDisplay: "30.00", priceValue: 30.0, cat: "Tzedakah Boxes", img: "images/Classic tzedakah box.png" },
-<script>
-let currentLang = 'en';
-let cart = [];
-let currentOrderNumber = '';
-let appliedCoupon = null;
-let currentProductId = null;
-const BASE_IMG_URL = "https://mmprinting3d.github.io/MM-3D-Printing/";
+  { id: 702, nameEn: "Classic tzedakah box", nameHe: "קופת צדקה קלאסית", priceDisplay: "30.00", priceValue: 30.0, cat: "Tzedakah Boxes", img: "images/Classic tzedakah box.png" }
+];
+
+const allCategories = [
+  { id: "Smart Kitchen Tools", en: "Smart Kitchen Tools", he: "פתרונות חכמים למטבח" },
+  { id: "Pesach", en: "Pesach", he: "פסח" },
+  { id: "Shopping Essentials", en: "Shopping Essentials", he: "אביזרים לקניות" },
+  { id: "Keyrings", en: "Keyrings", he: "מחזיקי מפתחות" },
+  { id: "Fidget Toys", en: "Fidget Toys", he: "צעצועי פידג'ט" },
+  { id: "Tefillin Boxes", en: "Tefillin Boxes", he: "בתי תפילין" },
+  { id: "Tzedakah Boxes", en: "Tzedakah Boxes", he: "קופות צדקה" },
+  { id: "Travel Essentials", en: "Travel Essentials", he: "אביזרים לנוסעים" },
+  { id: "Tools and Accessories", en: "Tools and Accessories", he: "כלים ואביזרים" }
+];
 
 // Calculate repository base path for clean product URLs
 const BASE_PATH = (function() {
@@ -415,19 +374,6 @@ function getProductFromUrl() {
 
   return null;
 }
-];
-
-const allCategories = [
-  { id: "Smart Kitchen Tools", en: "Smart Kitchen Tools", he: "פתרונות חכמים למטבח" },
-  { id: "Pesach", en: "Pesach", he: "פסח" },
-  { id: "Shopping Essentials", en: "Shopping Essentials", he: "אביזרים לקניות" },
-  { id: "Keyrings", en: "Keyrings", he: "מחזיקי מפתחות" },
-  { id: "Fidget Toys", en: "Fidget Toys", he: "צעצועי פידג'ט" },
-  { id: "Tefillin Boxes", en: "Tefillin Boxes", he: "בתי תפילין" },
-  { id: "Tzedakah Boxes", en: "Tzedakah Boxes", he: "קופות צדקה" },
-  { id: "Travel Essentials", en: "Travel Essentials", he: "אביזרים לנוסעים" },
-  { id: "Tools and Accessories", en: "Tools and Accessories", he: "כלים ואביזרים" }
-];
 
 const ui = {
   en: { 
